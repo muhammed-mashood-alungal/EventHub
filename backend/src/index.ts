@@ -1,12 +1,25 @@
 import express from "express";
-import { env } from "./configs";
+import { connectRedis, env } from "./configs";
 import { connectDB } from "./configs";
 import { errorHandler } from "./middlewares";
 import { routeNotFound } from "./middlewares";
 import authRouter from "./routes/auth.routes";
+import morgan from "morgan";
+import cors from "cors";
 
 const app = express();
 
+app.use(morgan("dev"));
+
+app.use(
+  cors({
+    origin: env. CLIENT_URL,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  })
+);
+
+connectRedis();
 connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

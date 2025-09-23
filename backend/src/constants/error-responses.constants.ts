@@ -11,17 +11,18 @@ export const ERROR = {
     INVALID_CREDENTIALS: "Invalid email or password",
     INACTIVE_ACCOUNT: "Account is inactive",
     INVALID_PASSWORD: "Invalid password",
-
   },
   ORGANIZATION: {
     NAME_REQUIRED: "Organization name is required",
     ADDRESS_REQUIRED: "Organization address is required",
     INVALID_URL_FORMAT: "Invalid URL format",
   },
-  TOKEN : {
+  TOKEN: {
     ERROR_GENERATING_TOKEN: "Error generating token",
     INVALID_TOKEN: "Invalid token",
     TOKEN_EXPIRED: "Token has expired",
+    NO_TOKEN_PROVIDED: "Token Not Provided",
+    TOKEN_REVOKED: "TOken Revoked",
   },
   EVENT: {},
 } as const;

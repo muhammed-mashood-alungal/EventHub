@@ -4,6 +4,7 @@ import { signinSchema, signupSchema } from "../schemas";
 import { UserRepository } from "../repositories";
 import { AuthService } from "../services";
 import { AuthController } from "../controllers";
+import { authMiddleware } from "../middlewares/auth.middleware";
 
 const authRouter = Router();
 
@@ -21,5 +22,11 @@ authRouter.post(
   validateSchema(signinSchema),
   authController.signin.bind(authController)
 );
+authRouter.get(
+  "/me",
+  authMiddleware,
+  authController.authMe.bind(authController)
+);
+authRouter.post("/logout", authController.logout.bind(authController));
 
 export default authRouter;

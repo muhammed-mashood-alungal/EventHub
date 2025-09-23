@@ -24,4 +24,8 @@ export interface IUserSigninPayload {
   password: string;
 }
 
-export interface IUserResponse extends Omit<IUser, "password"> {}
+export interface IUserResponse extends Omit<IUser, "password" | "_id"> {
+  id: string;
+    isOrganizer : boolean; 
+
+}
