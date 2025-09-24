@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Box, useBreakpointValue } from "@chakra-ui/react";
 import { OrganizerSidebar } from "../components/organizer/OrganizerSidebar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/auth.context";
 
 const OrganizerLayout = () => {
   const [activeSection, setActiveSection] = useState<"dashboard" | "events">(
@@ -9,6 +10,17 @@ const OrganizerLayout = () => {
   );
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, isAuthenticated, authLoading } = useAuth();
+
+  useEffect(() => {
+    if (authLoading) {
+      return;
+    } else if (!authLoading && !isAuthenticated) {
+      navigate("/login", { state: { from: location.pathname } });
+    } else if (isAuthenticated && user?.role != "organizer") {
+      navigate("/");
+    }
+  }, [authLoading, isAuthenticated]);
 
   useEffect(() => {
     if (location.pathname.includes("events")) {

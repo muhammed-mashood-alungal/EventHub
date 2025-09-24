@@ -25,8 +25,14 @@ export const ERROR = {
     TOKEN_REVOKED: "TOken Revoked",
   },
   EVENT: {
-    EVENT_NOT_FOUND : 'Event Not Found',
-    SEAT_FILLED : 'Event Seat Filled',
-    EVENT_EXISTS : "Event With Same title Exists Already for you."
+    EVENT_NOT_FOUND: "Event Not Found",
+    SEAT_FILLED: "Event Seat Filled",
+    EVENT_EXISTS: "Event With Same title Exists Already for you.",
+  },
+  TICKET: {
+    NOT_FOUND: "Ticket not found",
+    ATTENDENCE_ALREADY_MARKED: "Attendance already marked",
+    FOOD_SERVED_ALREADY: (foodType: string) =>
+      `Food served for ${foodType} already registered`,
   },
 } as const;

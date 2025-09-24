@@ -3,9 +3,9 @@ import { connectRedis, env } from "./configs";
 import { connectDB } from "./configs";
 import { errorHandler } from "./middlewares";
 import { routeNotFound } from "./middlewares";
-import authRouter from "./routes/auth.routes";
 import morgan from "morgan";
 import cors from "cors";
+import { authRouter, eventRouter, ticketRouter } from "./routes";
 
 const app = express();
 
@@ -25,6 +25,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/events", eventRouter);
+app.use("/api/v1/tickets", ticketRouter);
 
 app.use(errorHandler);
 app.use(routeNotFound);

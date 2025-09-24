@@ -5,7 +5,7 @@ import { EventController } from "../controllers";
 import { authMiddleware, isOrganizer, validateSchema } from "../middlewares";
 import { eventCreateSchema, eventUpdateSchema } from "../schemas/event.schema";
 
-const eventRouter = Router();
+export const eventRouter = Router();
 
 const eventRepo = new EventRepository();
 const eventService = new EventService(eventRepo);
@@ -43,4 +43,3 @@ eventRouter.get(
   eventController.getEventBySlug.bind(eventController)
 );
 
-export default eventRouter;

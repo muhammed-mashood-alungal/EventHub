@@ -5,7 +5,7 @@ import { UserRepository } from "../repositories";
 import { AuthService } from "../services";
 import { AuthController } from "../controllers";
 
-const authRouter = Router();
+export const authRouter = Router();
 
 const userRepo = new UserRepository();
 const authService = new AuthService(userRepo);

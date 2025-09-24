@@ -47,9 +47,13 @@ export abstract class BaseRepository<T extends Document> {
 
   async updateOne(
     filter: FilterQuery<T>,
-    update: UpdateQuery<T>
+    update: UpdateQuery<T>,
+    options: any = {
+      upsert: true,
+      new: true,
+    }
   ): Promise<UpdateWriteOpResult> {
-    return this.model.updateOne(filter, update);
+    return this.model.updateOne(filter, update, options);
   }
 
   async delete(id: Types.ObjectId): Promise<T | null> {
