@@ -4,5 +4,12 @@ export const SUCCESS = {
     SIGNIN_SUCCESS: "User signed in successfully",
     LOGOUT_SUCCESS: "Logout out successfully",
   },
-  EVENT: {},
+  EVENT: {
+    CREATE_SUCCESS: "Event Created Successfully",
+    UPDATED: "Event Updated Successfully",
+    REGISTERED: "Event Registered Successfully",
+  },
+  COMMON: {
+    OK: "Ok",
+  },
 } as const;

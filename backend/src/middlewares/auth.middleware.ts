@@ -2,14 +2,11 @@ import { NextFunction, Request, Response, RequestHandler } from "express";
 import { createHttpsError, isTokenRevoked, verifyToken } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { ERROR } from "../constants";
+import { IUserTokenPayload } from "../types";
 
-
-interface AuthRequest extends Request {
-  user?:string ;
-}
 
 export const authMiddleware: RequestHandler = async (
-  req: AuthRequest,
+  req: Request,
   _res: Response,
   next: NextFunction
 ) => {
@@ -33,8 +30,7 @@ export const authMiddleware: RequestHandler = async (
       throw createHttpsError(StatusCodes.UNAUTHORIZED, ERROR.TOKEN.INVALID_TOKEN);
      
     }
-    req.user = user.id as string;
-
+    req.user = user as IUserTokenPayload;
     next();
   } catch (error) {
     next(error);

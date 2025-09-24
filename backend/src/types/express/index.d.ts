@@ -1,8 +1,10 @@
-declare namespace Express {
-  export interface Request {
-      user?: string;
-  }
-  export interface Response {
-      user?: string;
+import { IUserTokenPayload } from "../user.types";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: IUserTokenPayload;
+      userId?: string; 
+    }
   }
 }

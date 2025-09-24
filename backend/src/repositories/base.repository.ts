@@ -2,6 +2,7 @@ import {
   Document,
   FilterQuery,
   Model,
+  PopulateOptions,
   Types,
   UpdateQuery,
   UpdateWriteOpResult,
@@ -18,8 +19,11 @@ export abstract class BaseRepository<T extends Document> {
     return this.model.findById(id);
   }
 
-  async find(filter: FilterQuery<T>): Promise<T[]> {
-    return this.model.find(filter);
+  async find(
+    filter: FilterQuery<T>,
+    populate: PopulateOptions = { path: "" }
+  ): Promise<T[]> {
+    return this.model.find(filter).populate(populate);
   }
 
   async findOne(filter: FilterQuery<T>): Promise<T | null> {

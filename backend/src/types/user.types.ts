@@ -26,6 +26,10 @@ export interface IUserSigninPayload {
 
 export interface IUserResponse extends Omit<IUser, "password" | "_id"> {
   id: string;
-    isOrganizer : boolean; 
+  isOrganizer: boolean;
+}
 
+export interface IUserTokenPayload {
+  id: string;
+  role: "user" | "organizer";
 }

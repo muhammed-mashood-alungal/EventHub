@@ -24,5 +24,9 @@ export const ERROR = {
     NO_TOKEN_PROVIDED: "Token Not Provided",
     TOKEN_REVOKED: "TOken Revoked",
   },
-  EVENT: {},
+  EVENT: {
+    EVENT_NOT_FOUND : 'Event Not Found',
+    SEAT_FILLED : 'Event Seat Filled',
+    EVENT_EXISTS : "Event With Same title Exists Already for you."
+  },
 } as const;

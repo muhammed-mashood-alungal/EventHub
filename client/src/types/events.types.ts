@@ -2,7 +2,7 @@ import type z from "zod";
 import type { eventSchema } from "../schema/event.schema";
 
 export interface Event {
-  _id: string;
+  id: string;
   organizerId: string;
   title: string;
   description: string;
