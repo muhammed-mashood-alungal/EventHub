@@ -1,3 +1,4 @@
+import { mapTicket } from "../../mappers";
 import { TicketRepository } from "../../repositories";
 import { FoodType, ITicketResponse } from "../../types";
 import { generateTicketQR, generateUniqueCode } from "../../utils";
@@ -18,35 +19,48 @@ export class TicketService implements ITicketService {
       ...ticketPayload,
       qrCode,
     };
-    return await this._ticketRepository.createTicket(ticketData);
+    const newTicket = await this._ticketRepository.createTicket(ticketData);
+    return mapTicket(newTicket);
   }
 
   async getEventTickets(eventId: string): Promise<ITicketResponse[]> {
     const tickets = await this._ticketRepository.getEventTickets(eventId);
-    return tickets;
+    return tickets.map(mapTicket) as ITicketResponse[];
   }
 
   async getMyEventTickets(userId: string): Promise<ITicketResponse[]> {
     const tickets = await this._ticketRepository.getMyEventTickets(userId);
-    return tickets;
+    return tickets.map(mapTicket) as ITicketResponse[];
   }
 
   async markAttendance(uniqueCode: string): Promise<ITicketResponse | null> {
     const ticket = await this._ticketRepository.markAttendance(uniqueCode);
-    return ticket;
+    return mapTicket(ticket);
   }
   async serveFood(
     uniqueCode: string,
     foodType: FoodType
   ): Promise<ITicketResponse | null> {
     const ticket = await this._ticketRepository.serveFood(uniqueCode, foodType);
-    return ticket;
+    return mapTicket(ticket) as ITicketResponse | null;
   }
 
-  async validateTicket(uniqueCode: string): Promise<boolean> {
+  async validateTicket(qrData: string, actionType: string): Promise<boolean> {
+    const { uniqueCode } = JSON.parse(qrData);
 
-    /// validation logics here.
     const ticket = await this._ticketRepository.findOne({ uniqueCode });
-    return !!ticket;
+    if (!ticket) return false;
+
+    const action = actionType.split("-")[0];
+    if (action == "attendance") {
+      await this._ticketRepository.markAttendance(uniqueCode);
+    } else if (action == "food") {
+      await this._ticketRepository.serveFood(
+        uniqueCode,
+        actionType.split("-")[1] as FoodType
+      );
+      return false;
+    }
+    return true;
   }
 }

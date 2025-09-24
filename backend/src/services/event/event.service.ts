@@ -1,19 +1,31 @@
 import { StatusCodes } from "http-status-codes";
-import { IEventRepository } from "../../repositories";
+import { IEventRepository, IUserRepository } from "../../repositories";
 import {
   IEventCreate,
   IEventFilterOptions,
   IEventRegistration,
   IEventResponse,
+  ITicketResponse,
 } from "../../types";
-import { createHttpsError, generateSlug } from "../../utils";
+import {
+  createHttpsError,
+  generateSlug,
+  sendEventRegistrationEmail,
+} from "../../utils";
 import { IEventService } from "./event.interface.service";
 import { ERROR } from "../../constants";
 import { sl } from "zod/v4/locales";
 import { mapUserEventResponse } from "../../mappers/event.mapper";
+import { ITicketService } from "../ticket/ticket.interface.service";
+import { ITicketModel } from "../../models";
+import { mapTicket } from "../../mappers";
 
 export class EventService implements IEventService {
-  constructor(private _eventRepository: IEventRepository) {}
+  constructor(
+    private _eventRepository: IEventRepository,
+    private _userRepository: IUserRepository,
+    private _ticketService: ITicketService
+  ) {}
   async createEvent(
     eventData: IEventCreate,
     organizerId: string
@@ -79,10 +91,21 @@ export class EventService implements IEventService {
 
   async registerEvent(
     registrationData: IEventRegistration
-  ): Promise<IEventResponse> {
+  ): Promise<ITicketResponse> {
     const event = await this._eventRepository.registerEvent(registrationData);
-
-    /// Ticket Generation logic here.....
-    return mapUserEventResponse(event);
+    const generatedTicket = await this._ticketService.generateTicket(
+      registrationData.eventId.toString(),
+      registrationData.userId.toString()
+    );
+    const user = await this._userRepository.findUserById(
+      registrationData.userId as string
+    );
+    await sendEventRegistrationEmail(
+      user?.email!,
+      event.title,
+      generatedTicket.qrCode as string,
+      generatedTicket.uniqueCode as string
+    );
+    return mapTicket(generatedTicket);
   }
 }

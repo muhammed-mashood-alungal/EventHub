@@ -34,4 +34,22 @@ export class TicketController implements ITicketController {
       next(error);
     }
   }
+  async validateTicket(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { qrData, actionType } = req.body;
+      const validationResult = await this._ticketService.validateTicket(
+        qrData,
+        actionType
+      );
+      successResponse(res, StatusCodes.OK, ReasonPhrases.OK, {
+        validationResult,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

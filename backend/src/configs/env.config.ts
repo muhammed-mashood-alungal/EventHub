@@ -13,4 +13,6 @@ export const env = cleanEnv(process.env, {
   REDIS_USERNAME: str(),
   REDIS_PASSWORD: str(),
   CLIENT_URL: str(),
+  SENDER_EMAIL: str(),
+  NODEMAILER_PASSKEY: str(),
 });

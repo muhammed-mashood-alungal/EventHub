@@ -11,4 +11,9 @@ export interface ITicketController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  validateTicket(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
 }

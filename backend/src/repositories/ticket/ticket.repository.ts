@@ -15,16 +15,15 @@ export class TicketRepository
   }
 
   async createTicket(ticket: ITicketCreate): Promise<ITicketModel> {
-    const newTicket = await new Ticket(ticket);
-    return await newTicket.save();
+    return await this.model.create(ticket)
   }
 
   async getEventTickets(eventId: string): Promise<ITicketModel[]> {
-    return this.find({ eventId });
+    return await this.find({ eventId });
   }
 
   async getMyEventTickets(userId: string): Promise<ITicketModel[]> {
-    return this.find({ userId });
+    return await this.find({ userId });
   }
 
   async markAttendance(uniqueCode: string): Promise<ITicketModel | null> {

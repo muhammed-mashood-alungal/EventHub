@@ -3,6 +3,7 @@ import {
   IEventFilterOptions,
   IEventRegistration,
   IEventResponse,
+  ITicketResponse,
 } from "../../types";
 
 export interface IEventService {
@@ -17,5 +18,7 @@ export interface IEventService {
     eventId: string,
     event: IEventCreate
   ): Promise<IEventResponse | null>;
-  registerEvent(registrationData: IEventRegistration): Promise<IEventResponse>;
+  registerEvent(
+      registrationData: IEventRegistration
+    ): Promise<ITicketResponse>
 }
