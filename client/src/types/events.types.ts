@@ -8,10 +8,12 @@ export interface Event {
   description: string;
   venue: string;
   category: "Hackathon" | "Concert" | "Conference" | "Workshop" | "Other";
+  status : "upcoming" | "past" | "ongoing";
   startTime: string;
   endTime: string;
   isPublic: boolean;
   foodIncluded: boolean;
+  registeredCount? : number;
   meals: {
     breakfast?: boolean;
     lunch?: boolean;
