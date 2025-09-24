@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setAuthLoading(true);
       const { user } = await AuthService.authMe();
       setAuth(user);
+      setIsAuthenticated(true);
     } catch (error) {
       setIsAuthenticated(false);
       removeAuth();
@@ -36,7 +37,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const setAuth = (user: IUser | null, token?: string) => {
     setUser(user);
-    setIsAuthenticated(!!user);
+    setIsAuthenticated(true);
+    setAuthLoading(false);
     if (token) {
       localStorage.setItem("event_hub_token", token);
     }
@@ -45,6 +47,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const removeAuth = () => {
     localStorage.removeItem("event_hub_token");
     setUser(null);
+    setIsAuthenticated(false);
   };
 
   return (

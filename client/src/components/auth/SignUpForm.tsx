@@ -14,7 +14,7 @@ import { signupSchema } from "../../schema/auth.schema";
 import type { IRoles, ISignupInput } from "../../types/auth.types";
 import { InputField } from "../ui/Input-field";
 import OrganizationForm from "./OrganizationForm";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.services";
 import { useAuth } from "../../contexts/auth.context";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
@@ -26,9 +26,12 @@ type SignupFormData = ISignupInput & {
 
 const SignupForm: React.FC<{ role: IRoles }> = ({ role }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { setAuth } = useAuth();
   const handleError = useErrorHandler();
   const { notifySuccess } = useToastNotifier();
+  const from = location.state?.from?.pathname || "/dashboard";
+  
   const {
     register,
     handleSubmit,
@@ -46,7 +49,7 @@ const SignupForm: React.FC<{ role: IRoles }> = ({ role }) => {
       const { token, user, message } = await AuthService.register(submitData);
       setAuth(user, token);
       notifySuccess(message);
-      navigate("/");
+      navigate(from, { replace: true });
     } catch (error) {
       handleError(error, "Signup error");
     }

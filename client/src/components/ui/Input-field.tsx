@@ -47,6 +47,8 @@ export function InputField<T extends FieldValues>({
           }
         }}
         color="black"
+        
+        
       />
       {error && (
         <Text fontSize="sm" color="red.500" mt={1}>

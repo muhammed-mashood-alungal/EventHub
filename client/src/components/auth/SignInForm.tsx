@@ -3,7 +3,7 @@ import { Box, Button, VStack, Text, Spinner, Heading } from "@chakra-ui/react";
 import { loginSchema } from "../../schema/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ILoginInput } from "../../types/auth.types";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.services";
 import { useAuth } from "../../contexts/auth.context";
 import { useToastNotifier } from "../../contexts/toast.context";
@@ -13,10 +13,12 @@ import { useState } from "react";
 
 function SignInForm() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { setAuth } = useAuth();
   const { notifySuccess } = useToastNotifier();
   const handleError = useErrorHandler();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const from = location.state?.from?.pathname || "/orgaaa";
 
   const {
     register,
@@ -32,7 +34,7 @@ function SignInForm() {
       const { token, user, message } = await AuthService.login(data);
       setAuth(user, token);
       notifySuccess(message);
-      navigate("/");
+      navigate(from, { replace: true });
     } catch (error) {
       handleError(error, "Login error");
     } finally {

@@ -1,12 +1,20 @@
 import { Routes, Route } from "react-router-dom";
-import { ProtectedRoute } from "./ProtectedRoute";
 import { PublicRoute } from "./PublicRoute";
 import { useAuth } from "../contexts/auth.context";
 import LoginPage from "../pages/auth/SignInPage";
 import SignupPage from "../pages/auth/SignupPage";
+import OrganizerLayout from "../layouts/OrganizerLayout";
+import { useEffect } from "react";
+import OrganizerDashboard from "../pages/organizer/OrganizerDashboard";
+import MyEvents from "../pages/organizer/MyEvents";
+import CreateEvent from "../pages/organizer/CreateEvent";
 
 export default function AppRoutes() {
-  const { isAuthenticated, authLoading } = useAuth();
+  const { isAuthenticated, authLoading, user } = useAuth();
+  useEffect(() => {
+    console.log("Auth Loading:", authLoading);
+    console.log("Is Authenticated:", isAuthenticated);
+  }, [authLoading, isAuthenticated]);
 
   return (
     <Routes>
@@ -28,7 +36,7 @@ export default function AppRoutes() {
             isAuthenticated={isAuthenticated}
             isLoading={authLoading}
           >
-            <SignupPage  role="user" />
+            <SignupPage role="user" />
           </PublicRoute>
         }
       />
@@ -44,19 +52,14 @@ export default function AppRoutes() {
         }
       />
 
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute
-            isAuthenticated={isAuthenticated}
-            isLoading={authLoading}
-          >
-            <div>dfsdf</div>
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/org" element={<OrganizerLayout />}>
+        <Route path="dashboard" element={<OrganizerDashboard />} />
+        <Route path="events" element={<MyEvents />} />
+         <Route path="events/create" element={<CreateEvent />} />
+      </Route>
 
-      {/* Optional: catch-all 404 page */}
+  
+     
       <Route path="*" element={<div>Page Not Found</div>} />
     </Routes>
   );

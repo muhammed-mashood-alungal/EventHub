@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -12,15 +12,19 @@ export const ProtectedRoute = ({
   children,
   isAuthenticated,
   isLoading,
-  allowedRoles = ['user'],
-  role = 'user',
+  allowedRoles = ["user"],
+  role = "user",
 }: ProtectedRouteProps) => {
+  const location = useLocation();
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+  if (!isLoading && !isAuthenticated) {
+    console.log(isAuthenticated);
+    console.log("Not authenticated, redirecting to login");
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
   if (allowedRoles && !allowedRoles.includes(role)) {
