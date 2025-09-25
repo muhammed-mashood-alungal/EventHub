@@ -29,7 +29,7 @@ const SidebarContent = ({
   <VStack gap={4} align="stretch" h="full">
     <Box p={6} borderBottom="1px" borderColor="gray.200">
       <Text fontSize="xl" fontWeight="bold" color="black">
-        Dashboard
+       User Dashboard
       </Text>
     </Box>
 

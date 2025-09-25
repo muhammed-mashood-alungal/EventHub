@@ -1,5 +1,5 @@
 import React from "react";
-import { Table } from "@chakra-ui/react";
+import { Table, } from "@chakra-ui/react";
 import type { IPagination, TableColumn } from "../../types/common.types";
 
 interface ReusableTableProps {
@@ -8,10 +8,7 @@ interface ReusableTableProps {
   pagination?: IPagination | null;
 }
 
-const ReusableTable: React.FC<ReusableTableProps> = ({
-  data,
-  columns,
-}) => {
+const ReusableTable: React.FC<ReusableTableProps> = ({ data, columns }) => {
   return (
     <>
       <Table.Root>
@@ -40,6 +37,18 @@ const ReusableTable: React.FC<ReusableTableProps> = ({
               ))}
             </Table.Row>
           ))}
+
+          {data.length === 0 && (
+            <Table.Row  bg={"gray.100"} color={"black"}>
+              <Table.Cell
+                colSpan={columns.length + 1}
+                textAlign="center"
+                border={0}
+              >
+                No Items Found
+              </Table.Cell>
+            </Table.Row>
+          )}
         </Table.Body>
       </Table.Root>
     </>

@@ -1,4 +1,4 @@
-import { Box, Container } from "@chakra-ui/react";
+import { Box, Button, Container } from "@chakra-ui/react";
 import { EventForm } from "../../components/events/EventForm";
 import { useNavigate } from "react-router-dom";
 import type { EventFormData } from "../../types/events.types";
@@ -14,7 +14,7 @@ function CreateEvent() {
   const handleEventSubmit = async (data: EventFormData) => {
     try {
       const createdEvent = await EventService.createEvent(data);
-      navigate(`/events/${createdEvent.slug}`, { replace: true });
+      navigate(`/org/events/${createdEvent.slug}`, { replace: true });
       notifySuccess("Event created successfully");
     } catch (error) {
       handleError(error, "Create Event Error");
@@ -24,6 +24,19 @@ function CreateEvent() {
   return (
     <Box minH="100vh" bg="gray.100" py={8}>
       <Container maxW="7xl" px={{ base: 4, lg: 8 }}>
+        <Button
+          color={"gray.800"}
+          colorScheme={"gray"}
+          variant={"outline"}
+          _hover={{
+            bg: "gray.100",
+          }}
+          width={20}
+          mb={5}
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </Button>
         <EventForm
           onCancel={() => navigate("/org/events")}
           onSubmit={handleEventSubmit}

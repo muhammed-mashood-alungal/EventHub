@@ -250,7 +250,7 @@ export function EventsList({
                       navigate(
                         isOrganizer
                           ? `/org/events/${event.slug}`
-                          : `/events/${event.slug}`
+                          : `/${event.slug}`
                       );
                     }}
                   >

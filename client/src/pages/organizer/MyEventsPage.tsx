@@ -17,8 +17,6 @@ function MyEvents() {
     try {
       setIsLoading(true);
       const { data, pagination } = await EventService.getMyEvents(query);
-      console.log("Pagination:", pagination);
-      console.log("Events:", data);
       setEvents(data);
       setPagination(pagination);
     } catch (error) {

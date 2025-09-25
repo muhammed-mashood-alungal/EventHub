@@ -15,8 +15,8 @@ const UserLayout = () => {
   useEffect(() => {
     if (location.pathname.includes("events")) {
       setActiveSection("events");
-    }else if(location.pathname.includes('tickets')){
-      setActiveSection('tickets')
+    } else if (location.pathname.includes("tickets")) {
+      setActiveSection("tickets");
     }
   }, [location]);
 
@@ -24,6 +24,11 @@ const UserLayout = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   const handleSectionChange = (section: "events" | "tickets") => {
+    if (section == "events") {
+      navigate("/");
+      setActiveSection("events");
+      return
+    }
     navigate(`/${section}`);
   };
 

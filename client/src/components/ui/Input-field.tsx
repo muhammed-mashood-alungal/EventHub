@@ -30,11 +30,12 @@ export function InputField<T extends FieldValues>({
         {label} {optional ? "(Optional)" : ""}
       </Text>
       <Input
+        bg={"gray.200"}
         type={type}
         placeholder={placeholder}
         size={size}
         {...register(name as any, { required })}
-        bg="white"
+        
         borderColor="gray.300"
         _hover={{ borderColor: "gray.400" }}
         _focus={{
@@ -47,8 +48,6 @@ export function InputField<T extends FieldValues>({
           }
         }}
         color="black"
-        
-        
       />
       {error && (
         <Text fontSize="sm" color="red.500" mt={1}>

@@ -105,7 +105,7 @@ export function EventForm({
 
                 <SelectRoot collection={categories} {...register("category")}>
                   <SelectTrigger
-                    bg="white"
+                    bg={"gray.200"}
                     borderColor="gray.300"
                     _hover={{ borderColor: "gray.400" }}
                     _focus={{
@@ -161,7 +161,7 @@ export function EventForm({
                 {...register("description")}
                 placeholder="Enter event description"
                 rows={6}
-                bg="white"
+                bg={"gray.200"}
                 borderColor="gray.300"
                 _hover={{ borderColor: "gray.400" }}
                 _focus={{
@@ -348,6 +348,7 @@ export function EventForm({
 
             <HStack justify="flex-end" gap={3} pt={4}>
               <Button
+                color={"black"}
                 variant="outline"
                 onClick={onCancel}
                 disabled={isSubmitting}
@@ -356,9 +357,11 @@ export function EventForm({
               </Button>
               <Button
                 type="submit"
-                colorScheme="blue"
-                //   loading={isSubmitting}
-                //  loadingText={isEditing ? "Updating..." : "Creating..."}
+                variant={"solid"}
+                color={"white"}
+                bg={"black"}
+                loading={isSubmitting}
+                loadingText={isEditing ? "Updating..." : "Creating..."}
               >
                 {isEditing ? "Update Event" : "Create Event"}
               </Button>

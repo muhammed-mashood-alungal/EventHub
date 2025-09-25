@@ -35,7 +35,7 @@ function SignInForm() {
       setAuth(user, token);
       notifySuccess(message);
       console.log(user);
-      navigate(from ? from : user.role == "organizer" ? "/org/events" : "/events", {
+      navigate(from ? from : user.role == "organizer" ? "/org/events" : "/", {
         replace: true,
       });
     } catch (error) {

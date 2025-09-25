@@ -13,8 +13,10 @@ import {
   WrapItem,
   Card,
   ProgressRoot,
+  Link,
+  Box,
 } from "@chakra-ui/react";
-import { Calendar, Clock, Info, Edit, Trash2 } from "lucide-react";
+import { Calendar, Clock, Info, Edit, Building2, ExternalLink } from "lucide-react";
 import type { Event } from "../../types/events.types";
 import CustomButton from "../ui/button";
 import { useNavigate } from "react-router-dom";
@@ -30,9 +32,9 @@ const EventDetails: React.FC<EventDetailsProps> = ({
   event,
   isOrganizer,
   onRegister,
-  onCancel,
 }) => {
   const navigate = useNavigate();
+  console.log(event)
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
       Hackathon: "purple",
@@ -44,21 +46,54 @@ const EventDetails: React.FC<EventDetailsProps> = ({
     return colors[category] || "gray";
   };
 
+  const getEventStatus = () => {
+    const now = new Date();
+    const startTime = new Date(event.startTime);
+    const endTime = new Date(event.endTime);
+    
+    if (endTime < now) {
+      return "past";
+    } else if (startTime <= now && endTime >= now) {
+      return "ongoing";
+    } else {
+      return "upcoming";
+    }
+  };
+
+  const canEdit = () => {
+    const status = getEventStatus();
+    return isOrganizer && status !== "past";
+  };
+
   return (
     <Card.Root bg={"gray.200"} color={"gray.900"} border={0}>
       <Card.Body>
-        <VStack align="stretch" gap={4}>
-          <Flex justify="space-between" align="flex-start">
-            <VStack align="flex-start" gap={2}>
-              <Heading size="lg" color="gray.800">
+        <VStack align="stretch" gap={6}>
+          {/* Header Section */}
+          <Flex justify="space-between" align="flex-start" wrap="wrap" gap={4}>
+            <VStack align="flex-start" gap={2} flex={1} minW="250px">
+              <Heading size="xl" color="gray.800" lineHeight="shorter">
                 {event.title}
               </Heading>
-              <Badge colorScheme={getCategoryColor(event.category)} size="sm">
-                {event.category}
-              </Badge>
+              <HStack gap={2} wrap="wrap">
+                <Badge colorScheme={getCategoryColor(event.category)} size="sm">
+                  {event.category}
+                </Badge>
+                {getEventStatus() === "ongoing" && (
+                  <Badge colorScheme="green" size="sm">
+                    Live
+                  </Badge>
+                )}
+                {getEventStatus() === "past" && (
+                  <Badge colorScheme="gray" size="sm">
+                    Completed
+                  </Badge>
+                )}
+              </HStack>
             </VStack>
-            <VStack align="flex-end" gap={1}>
-              <Text fontSize="sm" color="gray.600">
+            
+            <VStack align="flex-end" gap={2} minW="140px">
+              <Text fontSize="sm" color="gray.600" textAlign="right">
                 {event?.registeredCount}/{event.capacity} registered
               </Text>
               <ProgressRoot
@@ -69,130 +104,218 @@ const EventDetails: React.FC<EventDetailsProps> = ({
               />
             </VStack>
           </Flex>
-          {event.guests && event.guests.length > 0 && (
-            <VStack align="flex-start" gap={2} mt={3}>
-              <Text fontSize="sm" fontWeight="medium" color="gray.700">
-                Guests:
-              </Text>
-              <VStack align="flex-start" gap={1} pl={2}>
-                {event.guests?.map((guest, index) => (
-                  <HStack key={index} gap={2}>
-                    <Badge bg={"yellow.600"} size="md">
-                      {guest.name}
-                    </Badge>
-                    <Text fontSize="md" color="gray.600">
-                      {guest.role}
+
+          {event.organizer?.organization && (
+            <Box>
+              <VStack align="flex-start" gap={3} p={4} bg="gray.100" borderRadius="md">
+                <Text fontSize="sm" fontWeight="semibold" color="gray.700">
+                  Organized by:
+                </Text>
+                <VStack align="flex-start" gap={2} pl={2}>
+                  <HStack gap={2}>
+                    <Icon as={Building2} color="gray.600" size="sm" />
+                    <Text fontSize="md" fontWeight="medium" color="gray.800">
+                      {event.organizer.organization.name}
                     </Text>
-                    {isOrganizer && (
-                      <Text fontSize="sm" color="gray.600">
-                        - ( Email Id : {guest.email})
-                      </Text>
-                    )}
                   </HStack>
-                ))}
+                  
+                  {event.organizer.organization.address && (
+                    <Text fontSize="sm" color="gray.600" pl={6}>
+                      {event.organizer.organization.address}
+                    </Text>
+                  )}
+                  
+                  {event.organizer.organization.website && (
+                    <HStack gap={2} pl={6}>
+                      <Icon as={ExternalLink} color="gray.500" size="xs" />
+                      <Link
+                        href={event.organizer.organization.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        fontSize="sm"
+                        color="blue.600"
+                        textDecoration="underline"
+                        _hover={{ color: "blue.800" }}
+                      >
+                        Visit Website
+                      </Link>
+                    </HStack>
+                  )}
+                </VStack>
               </VStack>
-            </VStack>
+            </Box>
           )}
 
-          <Text color="gray.700">{event.description}</Text>
+          {/* Guests Section */}
+          {event.guests && event.guests.length > 0 && (
+            <Box>
+              <VStack align="flex-start" gap={3}>
+                <Text fontSize="sm" fontWeight="semibold" color="gray.700">
+                  Featured Guests:
+                </Text>
+                <SimpleGrid 
+                  columns={{ base: 1, md: 2 }} 
+                  gap={3} 
+                  w="full"
+                  pl={2}
+                >
+                  {event.guests?.map((guest, index) => (
+                    <VStack 
+                      key={index} 
+                      align="flex-start" 
+                      gap={1}
+                      p={3}
+                      bg="gray.100"
+                      borderRadius="md"
+                    >
+                      <Badge bg={"yellow.600"} size="md">
+                        {guest.name}
+                      </Badge>
+                      <Text fontSize="sm" color="gray.600">
+                        {guest.role}
+                      </Text>
+                      {isOrganizer && (
+                        <Text fontSize="xs" color="gray.500">
+                          {guest.email}
+                        </Text>
+                      )}
+                    </VStack>
+                  ))}
+                </SimpleGrid>
+              </VStack>
+            </Box>
+          )}
 
-          <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-            <VStack align="flex-start" gap={2}>
-              <HStack>
-                <Icon as={Info} color="gray.500" />
-                <Text fontWeight="medium" color="gray.700">
-                  Venue:
-                </Text>
-                <Text color="gray.600">{event.venue}</Text>
-              </HStack>
-              <HStack>
-                <Icon as={Calendar} color="gray.500" />
-                <Text fontWeight="medium" color="gray.700">
-                  Start:
-                </Text>
-                <Text color="gray.600">
-                  {new Date(event.startTime).toLocaleString()}
-                </Text>
-              </HStack>
-              <HStack>
-                <Icon as={Clock} color="gray.500" />
-                <Text fontWeight="medium" color="gray.700">
-                  End:
-                </Text>
-                <Text color="gray.600">
-                  {new Date(event.endTime).toLocaleString()}
-                </Text>
-              </HStack>
+          {/* Description Section */}
+          <Box>
+            <Text fontSize="sm" fontWeight="semibold" mb={3} color="gray.700">
+              Description:
+            </Text>
+            <Box
+              p={4}
+              bg="gray.50"
+              borderRadius="md"
+              borderLeft="4px solid"
+              borderLeftColor="gray.400"
+            >
+              <Text 
+                color="gray.700" 
+                lineHeight="relaxed"
+                whiteSpace="pre-wrap"
+                wordBreak="break-word"
+              >
+                {event.description}
+              </Text>
+            </Box>
+          </Box>
+
+          {/* Event Details Grid */}
+          <SimpleGrid columns={{ base: 1, lg: 2 }} gap={6}>
+            <VStack align="flex-start" gap={4}>
+              <Text fontSize="sm" fontWeight="semibold" color="gray.700">
+                Event Information:
+              </Text>
+              <VStack align="flex-start" gap={3} pl={2}>
+                <HStack gap={3}>
+                  <Icon as={Info} color="gray.500" />
+                  <VStack align="flex-start" gap={0}>
+                    <Text fontSize="sm" fontWeight="medium" color="gray.700">
+                      Venue:
+                    </Text>
+                    <Text fontSize="sm" color="gray.600">{event.venue}</Text>
+                  </VStack>
+                </HStack>
+                <HStack gap={3}>
+                  <Icon as={Calendar} color="gray.500" />
+                  <VStack align="flex-start" gap={0}>
+                    <Text fontSize="sm" fontWeight="medium" color="gray.700">
+                      Start Time:
+                    </Text>
+                    <Text fontSize="sm" color="gray.600">
+                      {new Date(event.startTime).toLocaleString()}
+                    </Text>
+                  </VStack>
+                </HStack>
+                <HStack gap={3}>
+                  <Icon as={Clock} color="gray.500" />
+                  <VStack align="flex-start" gap={0}>
+                    <Text fontSize="sm" fontWeight="medium" color="gray.700">
+                      End Time:
+                    </Text>
+                    <Text fontSize="sm" color="gray.600">
+                      {new Date(event.endTime).toLocaleString()}
+                    </Text>
+                  </VStack>
+                </HStack>
+              </VStack>
             </VStack>
 
             {event.foodIncluded && (
-              <VStack align="flex-start" gap={2}>
-                <Text fontWeight="medium" color="gray.700">
+              <VStack align="flex-start" gap={4}>
+                <Text fontSize="sm" fontWeight="semibold" color="gray.700">
                   Meals Included:
                 </Text>
-                <Wrap>
-                  {event.meals.breakfast && (
-                    <WrapItem>
-                      <Badge colorScheme="orange">Breakfast</Badge>
-                    </WrapItem>
-                  )}
-                  {event.meals.lunch && (
-                    <WrapItem>
-                      <Badge colorScheme="yellow">Lunch</Badge>
-                    </WrapItem>
-                  )}
-                  {event.meals.dinner && (
-                    <WrapItem>
-                      <Badge colorScheme="red">Dinner</Badge>
-                    </WrapItem>
-                  )}
-                  {event.meals.drinks && (
-                    <WrapItem>
-                      <Badge colorScheme="cyan">Drinks</Badge>
-                    </WrapItem>
-                  )}
-                </Wrap>
+                <Box pl={2}>
+                  <Wrap gap={2}>
+                    {event.meals.breakfast && (
+                      <WrapItem>
+                        <Badge colorScheme="orange" size="md">Breakfast</Badge>
+                      </WrapItem>
+                    )}
+                    {event.meals.lunch && (
+                      <WrapItem>
+                        <Badge colorScheme="yellow" size="md">Lunch</Badge>
+                      </WrapItem>
+                    )}
+                    {event.meals.dinner && (
+                      <WrapItem>
+                        <Badge colorScheme="red" size="md">Dinner</Badge>
+                      </WrapItem>
+                    )}
+                    {event.meals.drinks && (
+                      <WrapItem>
+                        <Badge colorScheme="cyan" size="md">Drinks</Badge>
+                      </WrapItem>
+                    )}
+                  </Wrap>
+                </Box>
               </VStack>
             )}
           </SimpleGrid>
 
           <Separator />
 
-          <Flex justify="center" gap={4}>
-            {isOrganizer ? (
-              <>
-                <CustomButton
-                  colorScheme="blue"
-                  leftIcon={<Edit />}
-                  onClick={() =>
-                    navigate(`/org/events/${event.slug}/edit`, {
-                      state: { event },
-                    })
-                  }
-                >
-                  Edit Event
-                </CustomButton>
-                {/* <CustomButton
-                  colorScheme="red"
-                  variant="outline"
-                  leftIcon={<Trash2 />}
-                  onClick={onCancel}
-                >
-                  Cancel Event
-                </CustomButton> */}
-              </>
-            ) : (
-              
+          {/* Action Buttons */}
+          <Flex justify="center" gap={4} wrap="wrap">
+            {canEdit() ? (
               <CustomButton
-                colorScheme="green"
-                size="lg"
-                onClick={onRegister}
-                isDisabled={event.registeredCount! >= event.capacity}
+                colorScheme="blue"
+                leftIcon={<Edit />}
+                onClick={() =>
+                  navigate(`/org/events/${event.slug}/edit`, {
+                    state: { event },
+                  })
+                }
               >
-                {event.registeredCount! >= event.capacity
-                  ? "Event Full"
-                  : event.registered ? 'Already Registered'  : 'Register'}
+                Edit Event
               </CustomButton>
+            ) : (
+              !isOrganizer && (
+                <CustomButton
+                  colorScheme="green"
+                  size="lg"
+                  onClick={onRegister}
+                  isDisabled={event.registeredCount! >= event.capacity || getEventStatus() === "past"}
+                >
+                  {getEventStatus() === "past"
+                    ? "Event Completed"
+                    : event.registeredCount! >= event.capacity
+                    ? "Event Full"
+                    : event.registered
+                    ? "Already Registered"
+                    : "Register"}
+                </CustomButton>
+              )
             )}
           </Flex>
         </VStack>

@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import { Box, useBreakpointValue } from "@chakra-ui/react";
 import { OrganizerSidebar } from "../components/organizer/OrganizerSidebar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/auth.context";
 
 const OrganizerLayout = () => {
-  const [activeSection, setActiveSection] = useState<"dashboard" | "events">(
-    "dashboard"
+  const [activeSection, setActiveSection] = useState<"events">(
+    "events"
   );
   const location = useLocation();
   const navigate = useNavigate();
@@ -15,15 +14,13 @@ const OrganizerLayout = () => {
   useEffect(() => {
     if (location.pathname.includes("events")) {
       setActiveSection("events");
-    } else {
-      setActiveSection("dashboard");
-    }
+    } 
   }, [location]);
 
   const sidebarWidth = useBreakpointValue({ base: 0, md: 280 });
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const handleSectionChange = (section: "dashboard" | "events") => {
+  const handleSectionChange = (section: "events") => {
     navigate(`/org/${section}`);
   };
 
