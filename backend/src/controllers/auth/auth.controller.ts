@@ -10,9 +10,9 @@ export class AuthController implements IAuthController {
 
   async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { token } = await this._authServices.signup(req.body);
+      const { token , user } = await this._authServices.signup(req.body);
       successResponse(res, StatusCodes.CREATED, SUCCESS.USER.SIGNUP_SUCCESS, {
-        token,
+        token,user
       });
     } catch (error) {
       next(error);
@@ -34,7 +34,7 @@ export class AuthController implements IAuthController {
   async authMe(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const token = req.headers.authorization?.split(" ")[1]!;
-      
+
       const user = await this._authServices.authMe(token);
       successResponse(res, StatusCodes.OK, ReasonPhrases.OK, {
         user,
