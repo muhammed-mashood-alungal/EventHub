@@ -3,6 +3,7 @@ import { ITicketController } from "./ticket.interface.controller";
 import { ITicketService } from "../../services/ticket/ticket.interface.service";
 import { successResponse } from "../../utils";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import { ITicketFilterOptions } from "../../types";
 
 export class TicketController implements ITicketController {
   constructor(private readonly _ticketService: ITicketService) {}
@@ -14,7 +15,11 @@ export class TicketController implements ITicketController {
   ): Promise<void> {
     try {
       const eventId = req.params?.eventId;
-      const tickets = await this._ticketService.getEventTickets(eventId);
+      const options: unknown = req.query;
+      const tickets = await this._ticketService.getEventTickets(
+        options as ITicketFilterOptions,
+        eventId
+      );
       successResponse(res, StatusCodes.OK, ReasonPhrases.OK, { tickets });
     } catch (error) {
       next(error);
@@ -28,7 +33,11 @@ export class TicketController implements ITicketController {
   ): Promise<void> {
     try {
       const userId = req.user?.id as string;
-      const tickets = await this._ticketService.getMyEventTickets(userId);
+      const options: unknown = req.query;
+      const tickets = await this._ticketService.getMyEventTickets(
+        options as ITicketFilterOptions,
+        userId
+      );
       successResponse(res, StatusCodes.OK, ReasonPhrases.OK, { tickets });
     } catch (error) {
       next(error);

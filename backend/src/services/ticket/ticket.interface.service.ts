@@ -1,10 +1,10 @@
-import { ITicketResponse } from "../../types";
+import { IPagination, ITicketFilterOptions, ITicketResponse } from "../../types";
 
 export interface ITicketService {
   generateTicket(eventId: string, attendeeId: string): Promise<ITicketResponse>;
   validateTicket(qrData: string, actionType: string): Promise<boolean>;
-  getEventTickets(eventId: string): Promise<ITicketResponse[]>;
-  getMyEventTickets(userId: string): Promise<ITicketResponse[]>;
+  getEventTickets(options : ITicketFilterOptions, eventId: string): Promise<IPagination<ITicketResponse>>;
+  getMyEventTickets(options : ITicketFilterOptions,userId: string): Promise<IPagination<ITicketResponse>>;
   markAttendance(uniqueCode: string): Promise<ITicketResponse | null>;
   serveFood(
     uniqueCode: string,

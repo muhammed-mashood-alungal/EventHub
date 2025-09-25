@@ -5,11 +5,13 @@ import {
   IEventFilterOptions,
   IEventRegistration,
   IEventResponse,
+  IPagination,
   ITicketResponse,
 } from "../../types";
 import {
   createHttpsError,
   generateSlug,
+  paginate,
   sendEventRegistrationEmail,
 } from "../../utils";
 import { IEventService } from "./event.interface.service";
@@ -45,16 +47,39 @@ export class EventService implements IEventService {
     return mapUserEventResponse(newEvent);
   }
 
-  async getMyEvents(organizerId: string): Promise<IEventResponse[]> {
-    const events = await this._eventRepository.getMyEvents(organizerId);
-    //// NEED ORGANIZER SPECIFIC EVENTS FILTERING
-    return events.map((ev) => mapUserEventResponse(ev));
+  async getMyEvents(
+    options: IEventFilterOptions,
+    organizerId: string
+  ): Promise<IPagination<IEventResponse>> {
+    const { events, total } = await this._eventRepository.getMyEvents(
+      options,
+      organizerId
+    );
+    const mappedEvents = events.map(mapUserEventResponse);
+    const paginatedData = paginate(
+      total,
+      options.page,
+      options.limit,
+      mappedEvents
+    );
+    return paginatedData;
   }
 
-  async getAllEvents(options: IEventFilterOptions): Promise<IEventResponse[]> {
-    const events = await this._eventRepository.getAllEvents(options);
-    return events.map((ev) => mapUserEventResponse(ev));
+  async getAllEvents(
+    options: IEventFilterOptions
+  ): Promise<IPagination<IEventResponse>> {
+    const { events, total } = await this._eventRepository.getAllEvents(options);
+    const mappedEvents = events.map(mapUserEventResponse);
+    const paginatedData = paginate(
+      total,
+      options.page,
+      options.limit,
+      mappedEvents
+    );
+    return paginatedData;
   }
+
+  
   async getEventBySlug(
     slug: string,
     userId: string

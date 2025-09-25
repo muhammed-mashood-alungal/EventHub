@@ -10,6 +10,7 @@ import MyEvents from "../pages/organizer/MyEventsPage";
 import CreateEvent from "../pages/organizer/CreateEventPage";
 import EventPage from "../pages/organizer/EventPage";
 import { sampleEvents } from "../components/events/sample";
+import QRScanner from "../components/qr/QrScanner";
 
 export default function AppRoutes() {
   const { isAuthenticated, authLoading, user } = useAuth();
@@ -53,6 +54,13 @@ export default function AppRoutes() {
           </PublicRoute>
         }
       />
+            <Route
+        path="/sample"
+        element={
+            <QRScanner onScan={()=>console.log('scenner')} />
+        }
+      />
+
 
       <Route path="/org" element={<OrganizerLayout />}>
         <Route path="dashboard" element={<OrganizerDashboard />} />

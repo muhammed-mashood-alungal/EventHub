@@ -3,6 +3,7 @@ import {
   IEventFilterOptions,
   IEventRegistration,
   IEventResponse,
+  IPagination,
   ITicketResponse,
 } from "../../types";
 
@@ -11,14 +12,17 @@ export interface IEventService {
     eventData: IEventCreate,
     organizerId: string
   ): Promise<IEventResponse>;
-  getAllEvents(options: IEventFilterOptions): Promise<IEventResponse[]>;
-  getMyEvents(organizerId: string): Promise<IEventResponse[]>;
+  getAllEvents(
+    options: IEventFilterOptions
+  ): Promise<IPagination<IEventResponse>>;
+  getMyEvents(
+    options: IEventFilterOptions,
+    organizerId: string
+  ): Promise<IPagination<IEventResponse>>;
   getEventBySlug(slug: string, userId: string): Promise<IEventResponse | null>;
   updateEvent(
     eventId: string,
     event: IEventCreate
   ): Promise<IEventResponse | null>;
-  registerEvent(
-      registrationData: IEventRegistration
-    ): Promise<ITicketResponse>
+  registerEvent(registrationData: IEventRegistration): Promise<ITicketResponse>;
 }

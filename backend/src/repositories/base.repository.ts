@@ -7,6 +7,7 @@ import {
   UpdateQuery,
   UpdateWriteOpResult,
 } from "mongoose";
+import { IFilterOptions } from "../types";
 
 export abstract class BaseRepository<T extends Document> {
   constructor(protected model: Model<T>) {}
@@ -64,12 +65,22 @@ export abstract class BaseRepository<T extends Document> {
     return this.model.findOneAndDelete(filter);
   }
 
-  async paginate(page: number, limit: number, populate?: string): Promise<T[]> {
+  async paginate(
+    filterOptions: FilterQuery<T>,
+    page: number,
+    limit: number,
+    populate?: PopulateOptions | PopulateOptions[]
+  ): Promise<T[]> {
     const skip = (page - 1) * limit;
-    const query = this.model.find().skip(skip).limit(limit);
+    const query = this.model
+      .find(filterOptions)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
     if (populate) {
       query.populate(populate);
     }
-    return query;
+    return await query;
   }
+
 }

@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import { FoodType, IEvent } from "./events.types";
 import { IUser } from "./user.types";
+import { IPaginationFilters } from "./common.types";
 
 export interface IFoodServed {
   served: boolean;
@@ -26,6 +27,11 @@ export interface ITicket {
   };
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface ITicketFilterOptions extends IPaginationFilters {
+  uniqueCode: string;
+  status: "upcoming" | "past" | "ongoing";
 }
 
 export interface ITicketCreate

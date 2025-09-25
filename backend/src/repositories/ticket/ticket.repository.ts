@@ -1,10 +1,17 @@
 import { StatusCodes } from "http-status-codes";
 import { ITicketModel, IUserModel, Ticket } from "../../models";
-import { FoodType, ITicketCreate } from "../../types";
+import {
+  FoodType,
+  IEventFilterOptions,
+  ITicket,
+  ITicketCreate,
+  ITicketFilterOptions,
+} from "../../types";
 import { createHttpsError } from "../../utils";
 import { BaseRepository } from "../base.repository";
 import { ITicketRepository } from "./ticket.interface.repository";
 import { ERROR } from "../../constants";
+import { FilterQuery } from "mongoose";
 
 export class TicketRepository
   extends BaseRepository<ITicketModel>
@@ -15,15 +22,36 @@ export class TicketRepository
   }
 
   async createTicket(ticket: ITicketCreate): Promise<ITicketModel> {
-    return await this.model.create(ticket)
+    return await this.model.create(ticket);
   }
 
-  async getEventTickets(eventId: string): Promise<ITicketModel[]> {
-    return await this.find({ eventId });
+  async getEventTickets(
+    options: ITicketFilterOptions,
+    eventId: string
+  ): Promise<{ tickets: ITicketModel[]; total: number }> {
+    const tickets = await this.paginate(
+      { eventId },
+      options.page,
+      options.limit,
+      [{ path: "attendeeId" }, { path: "eventId" }]
+    );
+    const total = await this.model.countDocuments({ eventId });
+    return { tickets, total };
   }
 
-  async getMyEventTickets(userId: string): Promise<ITicketModel[]> {
-    return await this.find({ userId });
+  async getMyEventTickets(
+    options: ITicketFilterOptions,
+    userId: string
+  ): Promise<{ tickets: ITicketModel[]; total: number }> {
+    const tickets = await this.paginate(
+      { userId },
+      options.page,
+      options.limit,
+      [{ path: "attendeeId" }, { path: "eventId" }]
+    );
+
+    const total = await this.model.countDocuments({ userId });
+    return { tickets, total };
   }
 
   async markAttendance(uniqueCode: string): Promise<ITicketModel | null> {

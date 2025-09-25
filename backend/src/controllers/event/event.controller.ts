@@ -64,7 +64,6 @@ export class EventController implements IEventController {
       next(error);
     }
   }
-  
 
   async getMyEvents(
     req: Request,
@@ -72,7 +71,11 @@ export class EventController implements IEventController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const events = await this._eventService.getMyEvents(req?.userId as string);
+      const options: unknown = req.query;
+      const events = await this._eventService.getMyEvents(
+        options as IEventFilterOptions,
+        req?.userId as string
+      );
       successResponse(res, StatusCodes.OK, SUCCESS.COMMON.OK, {
         events,
       });
@@ -113,7 +116,7 @@ export class EventController implements IEventController {
         ticketDetails,
       });
     } catch (error) {
-        next(error)
+      next(error);
     }
   }
 }

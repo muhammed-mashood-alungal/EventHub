@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import { IUserModel } from "../models";
 import { IUserResponse } from "./user.types";
+import { IPaginationFilters } from "./common.types";
 
 export interface IEvent {
   _id: string | Types.ObjectId;
@@ -39,7 +40,7 @@ export interface IEventRegistration {
   eventId: string | Types.ObjectId;
 }
 
-export interface IEventFilterOptions {
+export interface IEventFilterOptions extends IPaginationFilters {
   title?: Object;
   status: "upcoming" | "past";
   category?: "Hackathon" | "Concert" | "Conference" | "Workshop" | "Other";
@@ -50,6 +51,5 @@ export interface IEventResponse extends Omit<IEvent, "_id" | "organizerId"> {
   status  : 'upcoming' | 'past' | 'ongoing'
   organizer : IUserResponse;
 }
-
 
 export type FoodType = "breakfast" | "lunch" | "dinner" | "drinks";

@@ -1,7 +1,12 @@
 import { mapTicket } from "../../mappers";
 import { TicketRepository } from "../../repositories";
-import { FoodType, ITicketResponse } from "../../types";
-import { generateTicketQR, generateUniqueCode } from "../../utils";
+import {
+  FoodType,
+  IPagination,
+  ITicketFilterOptions,
+  ITicketResponse,
+} from "../../types";
+import { generateTicketQR, generateUniqueCode, paginate } from "../../utils";
 import { ITicketService } from "./ticket.interface.service";
 
 export class TicketService implements ITicketService {
@@ -23,14 +28,40 @@ export class TicketService implements ITicketService {
     return mapTicket(newTicket);
   }
 
-  async getEventTickets(eventId: string): Promise<ITicketResponse[]> {
-    const tickets = await this._ticketRepository.getEventTickets(eventId);
-    return tickets.map(mapTicket) as ITicketResponse[];
+  async getEventTickets(
+    options: ITicketFilterOptions,
+    eventId: string
+  ): Promise<IPagination<ITicketResponse>> {
+    const { tickets, total } = await this._ticketRepository.getEventTickets(
+      options,
+      eventId
+    );
+    const mappedTickets = tickets.map(mapTicket) as ITicketResponse[];
+    const paginatedData = paginate(
+      total,
+      options.page,
+      options.limit,
+      mappedTickets
+    );
+    return paginatedData;
   }
 
-  async getMyEventTickets(userId: string): Promise<ITicketResponse[]> {
-    const tickets = await this._ticketRepository.getMyEventTickets(userId);
-    return tickets.map(mapTicket) as ITicketResponse[];
+  async getMyEventTickets(
+    options: ITicketFilterOptions,
+    userId: string
+  ): Promise<IPagination<ITicketResponse>> {
+    const { tickets, total } = await this._ticketRepository.getMyEventTickets(
+      options,
+      userId
+    );
+    const mappedTickets = tickets.map(mapTicket) as ITicketResponse[];
+    const paginatedData = paginate(
+      total,
+      options.page,
+      options.limit,
+      mappedTickets
+    );
+    return paginatedData;
   }
 
   async markAttendance(uniqueCode: string): Promise<ITicketResponse | null> {

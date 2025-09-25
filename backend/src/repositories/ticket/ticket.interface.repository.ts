@@ -1,10 +1,16 @@
 import { ITicketModel } from "../../models";
-import { ITicketCreate } from "../../types";
+import { ITicketCreate, ITicketFilterOptions } from "../../types";
 
 export interface ITicketRepository {
   createTicket(ticket: ITicketCreate): Promise<ITicketModel>;
-  getEventTickets(eventId: string): Promise<ITicketModel[]>;
-  getMyEventTickets(userId: string): Promise<ITicketModel[]>;
+  getEventTickets(
+    options: ITicketFilterOptions,
+    eventId: string
+  ): Promise<{ tickets: ITicketModel[]; total: number }>;
+  getMyEventTickets(
+    options: ITicketFilterOptions,
+    userId: string
+  ): Promise<{ tickets: ITicketModel[]; total: number }>;
   markAttendance(uniqueCode: string): Promise<ITicketModel | null>;
   serveFood(uniqueCode: string, foodType: string): Promise<ITicketModel | null>;
 }
