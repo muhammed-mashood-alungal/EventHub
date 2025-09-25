@@ -172,16 +172,17 @@ const EventDetails: React.FC<EventDetailsProps> = ({
                 >
                   Edit Event
                 </CustomButton>
-                <CustomButton
+                {/* <CustomButton
                   colorScheme="red"
                   variant="outline"
                   leftIcon={<Trash2 />}
                   onClick={onCancel}
                 >
                   Cancel Event
-                </CustomButton>
+                </CustomButton> */}
               </>
             ) : (
+              
               <CustomButton
                 colorScheme="green"
                 size="lg"
@@ -190,7 +191,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({
               >
                 {event.registeredCount! >= event.capacity
                   ? "Event Full"
-                  : "Register Now"}
+                  : event.registered ? 'Already Registered'  : 'Register'}
               </CustomButton>
             )}
           </Flex>

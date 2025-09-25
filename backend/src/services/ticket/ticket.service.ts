@@ -3,6 +3,7 @@ import { mapTicket } from "../../mappers";
 import { TicketRepository } from "../../repositories";
 import {
   FoodType,
+  IEventStats,
   IPagination,
   ITicketFilterOptions,
   ITicketResponse,
@@ -128,6 +129,13 @@ export class TicketService implements ITicketService {
       eventId,
       userId
     );
+    console.log(ticket)
     return !!ticket;
   }
+
+
+  async getEventStats(eventId: string) : Promise<IEventStats>{
+    return await this._ticketRepository.getEventStats(eventId)
+  }
+  
 }

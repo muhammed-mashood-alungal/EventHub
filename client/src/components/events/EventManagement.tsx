@@ -13,17 +13,15 @@ import {
 import CustomButton from "../ui/button";
 import type { Event } from "../../types/events.types";
 import { Check } from "lucide-react";
+import type { IEventStats } from "../../types/ticket.types";
 
 interface ManageEventProps {
   event: Event;
   onScanClick: (action: string) => void;
+  stats : IEventStats
 }
 
-const ManageEvent: React.FC<ManageEventProps> = ({ event, onScanClick }) => {
-  const attendedCount = 50;
-  const breakfastCount = 20;
-  const lunchCount = 30;
-  const dinnerCount = 40;
+const ManageEvent: React.FC<ManageEventProps> = ({ event, onScanClick  , stats}) => {
 
   return (
     <CardRoot bg={"gray.200"} color={"gray.900"} border={0}>
@@ -36,31 +34,33 @@ const ManageEvent: React.FC<ManageEventProps> = ({ event, onScanClick }) => {
           <SimpleGrid columns={{ base: 2, md: 4 }} gap={4}>
             <StatRoot>
               <StatLabel>Attendance</StatLabel>
-              <Stat.ValueText>{attendedCount}</Stat.ValueText>
-              <StatHelpText>of {10} participants</StatHelpText>
+              <Stat.ValueText>{stats?.participated}</Stat.ValueText>
+              <StatHelpText>
+                of {stats?.totalRegistrations}participants
+              </StatHelpText>
             </StatRoot>
 
             {event.meals.breakfast && (
               <StatRoot>
                 <StatLabel>Breakfast Served</StatLabel>
-                <Stat.ValueText>{breakfastCount}</Stat.ValueText>
-                <StatHelpText>of {attendedCount} attended</StatHelpText>
+                <Stat.ValueText>{stats?.food?.breakfast || 0}</Stat.ValueText>
+                <StatHelpText>of {stats?.participated} attended</StatHelpText>
               </StatRoot>
             )}
 
             {event.meals.lunch && (
               <StatRoot>
                 <StatLabel>Lunch Served</StatLabel>
-                <Stat.ValueText>{lunchCount}</Stat.ValueText>
-                <StatHelpText>of {attendedCount} attended</StatHelpText>
+                <Stat.ValueText>{stats?.food?.lunch || 0}</Stat.ValueText>
+                <StatHelpText>of {stats?.participated} attended</StatHelpText>
               </StatRoot>
             )}
 
             {event.meals.dinner && (
               <StatRoot>
                 <StatLabel>Dinner Served</StatLabel>
-                <Stat.ValueText>{dinnerCount}</Stat.ValueText>
-                <StatHelpText>of {attendedCount} attended</StatHelpText>
+                <Stat.ValueText>{stats?.food?.dinner || 0}</Stat.ValueText>
+                <StatHelpText>of {stats?.participated} attended</StatHelpText>
               </StatRoot>
             )}
           </SimpleGrid>

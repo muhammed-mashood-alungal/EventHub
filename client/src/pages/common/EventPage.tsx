@@ -23,6 +23,7 @@ import { useToastNotifier } from "../../contexts/toast.context";
 import LiveQrScanner from "../../components/events/QrScanner";
 import { TicketService } from "../../services/ticket.service";
 import BaseModal from "../../components/ui/model";
+import type { IEventStats, ITicket } from "../../types/ticket.types";
 
 interface EventManagementProps {
   currentUserId: string;
@@ -39,6 +40,18 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
   const { notifySuccess } = useToastNotifier();
   const [isQrOpen, setIsQrOpen] = useState(false);
   const [currentQrAction, setCurrentQrAction] = useState("");
+  const [stats, setStats] = useState<IEventStats>({
+    participated: 0,
+    totalRegistrations: 0,
+    food: {
+      breakfast: 0,
+      dinner: 0,
+      lunch: 0,
+    },
+  });
+  const isOrganizer = eventData?.organizer.id === currentUserId;
+
+  const [participants, setParticipants] = useState<ITicket[]>([]);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -64,9 +77,36 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
     fetchEvent();
   }, [slug, user]);
 
-  if (loading) return <div>Loading...</div>;
+  const fetchRegistraionStats = async () => {
+    try {
+      if (!eventData) return;
+      const data = await TicketService.getRegistraionStats(eventData.id);
+      setStats(data);
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
-  const isOrganizer = eventData?.organizer.id === currentUserId;
+  const fetchParticipants = async () => {
+    try {
+      if (!eventData) return;
+      const { data, pagination } = await TicketService.getEventTickets(
+        eventData.id
+      );
+      setParticipants(data);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  useEffect(() => {
+    if (isOrganizer) {
+      fetchRegistraionStats();
+      fetchParticipants();
+    }
+  }, [eventData]);
+
+  if (loading) return <div>Loading...</div>;
 
   const handleRegister = async () => {
     try {
@@ -82,24 +122,62 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
 
   const handleQrScan = async (qrData: string) => {
     try {
-      console.log(qrData)
       const { message } = await TicketService.validateTicket(
         qrData,
         currentQrAction
       );
       notifySuccess(message);
+      handleStatsChange();
     } catch (error) {
       handleError(error);
     }
   };
 
+  const handleStatsChange = () => {
+    setStats((stats: IEventStats) => {
+      if (currentQrAction == "attendance") {
+        return {
+          ...stats,
+          participated: stats.participated + 1,
+        };
+      } else if (currentQrAction == "food-breakfast") {
+        return {
+          ...stats,
+          food: { ...stats.food, breakfast: stats.food.breakfast + 1 },
+        };
+      } else if (currentQrAction == "food-lunch") {
+        return {
+          ...stats,
+          food: { ...stats.food, lunch: stats.food.lunch + 1 },
+        };
+      } else {
+        return {
+          ...stats,
+          food: { ...stats.food, dinner: stats.food.dinner + 1 },
+        };
+      }
+    });
+  };
+
   const participantColumns: TableColumn[] = [
-    { header: "Name", accessor: "name" },
-    { header: "Email", accessor: "email" },
-    { header: "Role", accessor: "role" },
+    {
+      header: "Name",
+      accessor: "attendee",
+      render: (attendee: any) => attendee?.name,
+    },
+    {
+      header: "Email",
+      accessor: "attendee",
+      render: (attendee: any) => attendee?.email,
+    },
+    {
+      header: "Phone",
+      accessor: "attendee",
+      render: (attendee: any) => attendee?.phone,
+    },
     {
       header: "Attended",
-      accessor: "attended",
+      accessor: "attendanceMarked",
       render: (value: boolean) => (
         <Badge colorScheme={value ? "green" : "red"}>
           {value ? "✅" : "❌"}
@@ -110,10 +188,10 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
       ? [
           {
             header: "Breakfast",
-            accessor: "meals",
-            render: (meals: any) => (
-              <Badge colorScheme={meals?.breakfast ? "green" : "red"}>
-                {meals?.breakfast ? "✅" : "❌"}
+            accessor: "foodServed",
+            render: (food: any) => (
+              <Badge colorScheme={food?.breakfast?.served ? "green" : "red"}>
+                {food?.breakfast?.served ? "✅" : "❌"}
               </Badge>
             ),
           },
@@ -123,10 +201,10 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
       ? [
           {
             header: "Lunch",
-            accessor: "meals",
-            render: (meals: any) => (
-              <Badge colorScheme={meals?.lunch ? "green" : "red"}>
-                {meals?.lunch ? "✅" : "❌"}
+            accessor: "foodServed",
+            render: (food: any) => (
+              <Badge colorScheme={food?.lunch?.served ? "green" : "red"}>
+                {food?.lunch?.served ? "✅" : "❌"}
               </Badge>
             ),
           },
@@ -136,10 +214,10 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
       ? [
           {
             header: "Dinner",
-            accessor: "meals",
-            render: (meals: any) => (
-              <Badge colorScheme={meals?.dinner ? "green" : "red"}>
-                {meals?.dinner ? "✅" : "❌"}
+            accessor: "foodServed",
+            render: (food: any) => (
+              <Badge colorScheme={food?.dinner?.served ? "green" : "red"}>
+                {food?.dinner?.served ? "✅" : "❌"}
               </Badge>
             ),
           },
@@ -172,6 +250,7 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
 
           {isOrganizer && (
             <ManageEvent
+              stats={stats!}
               event={eventData!}
               onScanClick={(action) => {
                 setCurrentQrAction(action);
@@ -188,7 +267,7 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
                     Participant List
                   </Heading>
                   <ReusableTable
-                    data={eventData?.guests}
+                    data={participants}
                     columns={participantColumns}
                   />
                 </CardBody>
@@ -196,10 +275,8 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
             </VStack>
           )}
 
-          <BaseModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} >
-            <LiveQrScanner
-              onScan={handleQrScan}
-            />
+          <BaseModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)}>
+            <LiveQrScanner onScan={handleQrScan} />
           </BaseModal>
         </VStack>
       </Container>

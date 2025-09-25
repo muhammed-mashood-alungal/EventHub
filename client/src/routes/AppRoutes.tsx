@@ -15,6 +15,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import EditEventPage from "../pages/organizer/EditEventPage";
 import UserLayout from "../layouts/UserLayout";
 import AllEventsPage from "../pages/user/AllEventsPage";
+import MyTicketsPage from "../pages/user/MyTickets";
 
 export default function AppRoutes() {
   const { isAuthenticated, authLoading, user } = useAuth();
@@ -63,9 +64,9 @@ export default function AppRoutes() {
         element={<QRScanner onScan={() => console.log("scenner")} />}
       />
 
-     
       <Route path="/" element={<UserLayout />}>
         <Route path="events" element={<AllEventsPage />} />
+        <Route path="tickets" element={<MyTicketsPage />} />
         <Route
           path="events/:slug"
           element={<EventPage currentUserId={user?.id as string} />}

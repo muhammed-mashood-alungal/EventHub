@@ -34,6 +34,7 @@ export class TicketController implements ITicketController {
     try {
       const userId = req.user?.id as string;
       const options: unknown = req.query;
+      console.log('UUUUUUUUUUUERRERRR IDDDDD  '+ userId)
       const tickets = await this._ticketService.getMyEventTickets(
         options as ITicketFilterOptions,
         userId
@@ -57,6 +58,20 @@ export class TicketController implements ITicketController {
       successResponse(res, StatusCodes.OK, ReasonPhrases.OK, {
         validationResult,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+ async getEventRegistrationStats(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { eventId } = req.params;
+      const stats = await this._ticketService.getEventStats(eventId as string);
+      successResponse(res, StatusCodes.OK, ReasonPhrases.OK, { stats });
     } catch (error) {
       next(error);
     }

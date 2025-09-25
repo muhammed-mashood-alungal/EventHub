@@ -69,10 +69,9 @@ export class EventRepository
     return eventData;
   }
 
-  async registerEvent(
+  async validateEventForRegistration(
     registrationData: IEventRegistration
   ): Promise<IEventModel> {
-    
     const event = await this.findOne({
       _id: toObjectId(registrationData.eventId),
     });
@@ -86,8 +85,11 @@ export class EventRepository
       throw createHttpsError(StatusCodes.BAD_REQUEST, ERROR.EVENT.SEAT_FILLED);
     }
 
-    event.registeredCount++;
-    return await event.save();
+    return event;
+  }
+
+  async increaseRegisterCount(eventId: string): Promise<void> {
+    await this.updateOne({ eventId }, { $inc: { registeredCount: 1 } });
   }
 
   _generateFilter(options: IEventFilterOptions) {

@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
-import { FoodType, IEvent } from "./events.types";
-import { IUser } from "./user.types";
+import { FoodType, IEvent, IEventResponse } from "./events.types";
+import { IUser, IUserResponse } from "./user.types";
 import { IPaginationFilters } from "./common.types";
 
 export interface IFoodServed {
@@ -18,15 +18,16 @@ export interface ITicket {
   attendeeId: string | IUser;
   qrCode: String;
   uniqueCode: String;
-  attendanceMarked: { type: Boolean; default: false };
-  foodServed: {
-    breakfast?: IFoodServed;
-    lunch?: IFoodServed;
-    dinner?: IFoodServed;
-    drinks?: IFoodServed;
-  };
+  attendanceMarked: boolean;
+  foodServed: FoodServed;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IEventStats {
+  totalRegistrations: number;
+  participated: number;
+  food: Record<FoodType, number>;
 }
 
 export interface ITicketFilterOptions extends IPaginationFilters {
@@ -41,6 +42,9 @@ export interface ITicketCreate
   > {}
 export interface ITickerUpdate extends Partial<ITicketCreate> {}
 
-export interface ITicketResponse extends Omit<ITicket, "_id"> {
+export interface ITicketResponse
+  extends Omit<ITicket, "_id" | "attendeeId" | "eventId"> {
   id: string;
+  attendee: IUserResponse;
+  event: IEventResponse;
 }

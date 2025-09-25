@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { IPagination, ITicketFilterOptions, ITicketResponse } from "../../types";
+import { IEventStats, IPagination, ITicketFilterOptions, ITicketResponse } from "../../types";
 
 export interface ITicketService {
   generateTicket(eventId: string, attendeeId: string): Promise<ITicketResponse>;
@@ -12,4 +12,5 @@ export interface ITicketService {
     foodType: string
   ): Promise<ITicketResponse | null>;
   isUserRegistered(eventId : string | Types.ObjectId, userId: string): Promise<boolean>;
+  getEventStats(eventId: string) : Promise<IEventStats>
 }

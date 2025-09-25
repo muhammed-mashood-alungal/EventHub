@@ -3,6 +3,7 @@ import { ITicketModel, IUserModel, Ticket } from "../../models";
 import {
   FoodType,
   IEventFilterOptions,
+  IEventStats,
   ITicket,
   ITicketCreate,
   ITicketFilterOptions,
@@ -44,9 +45,9 @@ export class TicketRepository
     userId: string
   ): Promise<{ tickets: ITicketModel[]; total: number }> {
     const tickets = await this.paginate(
-      { userId },
-      options.page,
-      options.limit,
+      { attendeeId: userId },
+      options.page || 1,
+      options.limit || 10,
       [{ path: "attendeeId" }, { path: "eventId" }]
     );
 
@@ -103,5 +104,35 @@ export class TicketRepository
     attendeeId: string
   ): Promise<ITicketModel | null> {
     return await this.findOne({ eventId, attendeeId });
+  }
+
+  async getEventStats(eventId: string): Promise<IEventStats> {
+    const tickets = await this.find({ eventId });
+    console.log(tickets);
+    const res: IEventStats = {
+      totalRegistrations: tickets.length,
+      participated: 0,
+      food: {
+        breakfast: 0,
+        lunch: 0,
+        dinner: 0,
+        drinks: 0,
+      },
+    };
+
+    for (let ticket of tickets) {
+      if (ticket.attendanceMarked) res.participated++;
+      if (ticket.foodServed) {
+        for (const foodType of Object.keys(
+          ticket.foodServed || {}
+        ) as FoodType[]) {
+          const foodDetail = ticket.foodServed[foodType];
+          if (foodDetail?.served) {
+            res.food[foodType]++;
+          }
+        }
+      }
+    }
+    return res;
   }
 }

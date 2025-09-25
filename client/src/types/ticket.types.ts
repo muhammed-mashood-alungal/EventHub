@@ -16,7 +16,7 @@ export type FoodServed = {
 export interface ITicket {
   id: string;
   event: Event;
-  attendeeId: IUser;
+  attendee: IUser;
   qrCode: String;
   uniqueCode: String;
   attendanceMarked: { type: Boolean; default: false };
@@ -28,6 +28,16 @@ export interface ITicket {
   };
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IEventStats {
+  totalRegistrations: number;
+  participated: number;
+  food: {
+    breakfast: number;
+    lunch: number;
+    dinner: number;
+  };
 }
 
 export interface ITicketFilterOptions extends IPaginationFilters {

@@ -1,7 +1,7 @@
 import { Button, Flex, Heading } from "@chakra-ui/react";
 import { EventsList } from "../../components/events/EventsList";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { EventService } from "../../services/event.service";
 import type { IPagination } from "../../types/common.types";

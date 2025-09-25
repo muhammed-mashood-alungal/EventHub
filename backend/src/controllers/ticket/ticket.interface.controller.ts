@@ -16,4 +16,5 @@ export interface ITicketController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  getEventRegistrationStats(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

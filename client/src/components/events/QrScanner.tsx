@@ -6,7 +6,7 @@ const LiveQrScanner = ({ onScan }: { onScan: (qrData: string) => void }) => {
     <VStack left={0} top={0} align="center">
       <Flex justify={"space-between"} p={5}>
         <Heading size="md" fontWeight="bold">
-          Live Ticket QR Scanner
+          Please Scan Your Qr Code
         </Heading>
       </Flex>
 

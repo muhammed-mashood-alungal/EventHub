@@ -3,6 +3,7 @@ import {
   IEventFilterOptions,
   IEventRegistration,
   IEventResponse,
+  IEventStats,
   IPagination,
   ITicketResponse,
 } from "../../types";

@@ -5,6 +5,7 @@ import {
   IEventFilterOptions,
   IEventRegistration,
   IEventResponse,
+  IEventStats,
   IPagination,
   ITicketResponse,
 } from "../../types";
@@ -93,6 +94,8 @@ export class EventService implements IEventService {
       event?._id,
       userId
     );
+
+    console.log(registered)
     return mapUserEventResponse(event, registered);
   }
 
@@ -116,21 +119,25 @@ export class EventService implements IEventService {
   async registerEvent(
     registrationData: IEventRegistration
   ): Promise<ITicketResponse> {
-    const event = await this._eventRepository.registerEvent(registrationData);
+    const event = await this._eventRepository.validateEventForRegistration(registrationData);
+
     const generatedTicket = await this._ticketService.generateTicket(
       registrationData.eventId.toString(),
       registrationData.userId.toString()
     );
+
     const user = await this._userRepository.findUserById(
       registrationData.userId as string
     );
+
+    await this._eventRepository.increaseRegisterCount(event.id as string)
+    
     await sendEventRegistrationEmail(
       user?.email!,
       event.title,
       generatedTicket.qrCode as string,
       generatedTicket.uniqueCode as string
     );
-    console.log(generatedTicket)
     return mapTicket(generatedTicket);
   }
 }

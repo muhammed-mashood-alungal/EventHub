@@ -18,6 +18,7 @@ export interface IEventRepository {
     eventId: string,
     event: IEventUpdate
   ): Promise<IEventModel | null>;
-  registerEvent(registrationData: IEventRegistration): Promise<IEventModel>;
+  validateEventForRegistration(registrationData: IEventRegistration): Promise<IEventModel>;
+  increaseRegisterCount(eventId: string): Promise<void> 
   // cancelEvent(eventId: string): Promise<boolean>;
 }

@@ -25,3 +25,9 @@ ticketRouter.post(
   isOrganizer,
   ticketController.validateTicket.bind(ticketController)
 );
+ticketRouter.get(
+  "/stats/:eventId",
+  authMiddleware,
+  isOrganizer,
+  ticketController.getEventRegistrationStats.bind(ticketController)
+);
