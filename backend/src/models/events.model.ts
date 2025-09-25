@@ -71,4 +71,4 @@ const eventSchema = new Schema<IEventModel>(
     timestamps: true,
   }
 );
-export const Event = model<IEventModel>("EUvent", eventSchema);
+export const Event = model<IEventModel>("Event", eventSchema);

@@ -16,7 +16,7 @@ export const PublicRoute = ({
   }
 
   if(isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;

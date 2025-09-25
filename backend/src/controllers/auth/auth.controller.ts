@@ -21,10 +21,11 @@ export class AuthController implements IAuthController {
 
   async signin(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { token } = await this._authServices.signin(req.body);
+      const { token , user} = await this._authServices.signin(req.body);
 
       successResponse(res, StatusCodes.OK, SUCCESS.USER.SIGNIN_SUCCESS, {
         token,
+        user
       });
     } catch (error) {
       next(error);

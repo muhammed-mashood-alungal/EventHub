@@ -1,30 +1,37 @@
 import { Box, Container } from "@chakra-ui/react";
 import { EventForm } from "../../components/events/EventForm";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import type { EventFormData } from "../../types/events.types";
-import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { EventService } from "../../services/event.service";
+import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { useToastNotifier } from "../../contexts/toast.context";
 
-function CreateEvent() {
+function EditEventPage() {
+  const location = useLocation();
+  const eventDetails = location.state.event;
   const navigate = useNavigate();
   const handleError = useErrorHandler();
   const { notifySuccess } = useToastNotifier();
 
-  const handleEventSubmit = async (data: EventFormData) => {
+  const handleEventSubmit = async (event: EventFormData) => {
     try {
-      const createdEvent = await EventService.createEvent(data);
-      navigate(`/events/${createdEvent.slug}`, { replace: true });
-      notifySuccess("Event created successfully");
+      const updatedEvent = await EventService.updateEvent(
+        eventDetails?.id,
+        event
+      );
+      navigate(`/events/${updatedEvent.slug}`, { replace: true });
+      notifySuccess("Event Updated successfully");
     } catch (error) {
-      handleError(error, "Create Event Error");
+      handleError(error, "Update Event Error");
     }
   };
-
+  
   return (
     <Box minH="100vh" bg="gray.100" py={8}>
       <Container maxW="7xl" px={{ base: 4, lg: 8 }}>
         <EventForm
+          isEditing={true}
+          initialData={eventDetails}
           onCancel={() => navigate("/org/events")}
           onSubmit={handleEventSubmit}
         />
@@ -33,4 +40,4 @@ function CreateEvent() {
   );
 }
 
-export default CreateEvent;
+export default EditEventPage;

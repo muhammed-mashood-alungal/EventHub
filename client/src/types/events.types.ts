@@ -1,29 +1,41 @@
 import type z from "zod";
 import type { eventSchema } from "../schema/event.schema";
+import type { IPaginationFilters } from "./common.types";
+import type { IUser } from "./user.types";
 
 export interface Event {
   id: string;
-  organizerId: string;
+  organizer: IUser;
   title: string;
   description: string;
   venue: string;
   category: "Hackathon" | "Concert" | "Conference" | "Workshop" | "Other";
-  status : "upcoming" | "past" | "ongoing";
+  status: "upcoming" | "past" | "ongoing";
   startTime: string;
   endTime: string;
-  isPublic: boolean;
+  slug : string;
   foodIncluded: boolean;
-  registeredCount? : number;
+  registeredCount?: number;
   meals: {
     breakfast?: boolean;
     lunch?: boolean;
     dinner?: boolean;
     drinks?: boolean;
   };
-  guests : { name : string , email : string ,  role : string}[]
-  capacity : number
+  guests: { name: string; email: string; role: string }[];
+  capacity: number;
   createdAt: string;
   updatedAt: string;
 }
 
 export type EventFormData = z.infer<typeof eventSchema>;
+
+export interface IEventFilterOptions extends IPaginationFilters {
+  title?: Object;
+  status: "upcoming" | "past";
+  category?: "Hackathon" | "Concert" | "Conference" | "Workshop" | "Other";
+}
+export interface IEventRegistration {
+  userId: string;
+  eventId: string;
+}

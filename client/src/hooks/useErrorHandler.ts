@@ -5,8 +5,8 @@ export function useErrorHandler() {
 
   return (error: unknown, context?: string) => {
     if (error instanceof Error) {
-      console.error(`${context || "Error"}:`, error.message);
-      notifyError(context || "Error", error.message);
+      console?.error(`${context || "Error"}:`, error?.message);
+      notifyError(context || "Error", error?.message);
     } else {
       console.error(`${context || "Error"}: Unexpected error`);
       notifyError(context || "Unexpected Error", "Something went wrong");

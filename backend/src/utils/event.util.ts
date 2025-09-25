@@ -8,7 +8,7 @@ export const getEventStatus = (startTime: Date, endTime: Date) => {
   if (startTime > currentTime) {
     return "upcoming";
   } else if (endTime < currentTime) {
-    return "past";
+    return "completed";
   } else {
     return "ongoing";
   }

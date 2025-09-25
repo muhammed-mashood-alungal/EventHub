@@ -8,6 +8,8 @@ export const isOrganizer: RequestHandler = async (
   next: NextFunction
 ) => {
   try {
+    console.log("Checking if user is organizer----------------------------");
+    console.log(req.user);
     if (req?.user?.role != "organizer") {
         throw createHttpsError(StatusCodes.FORBIDDEN, ReasonPhrases.FORBIDDEN)
     }

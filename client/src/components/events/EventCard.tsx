@@ -81,11 +81,7 @@ export function EventCard({ event }: EventCardProps) {
                 {/* <Badge colorScheme={getStatusColor(event.status)} variant="outline">
                   {event.status}
                 </Badge> */}
-                {!event.isPublic && (
-                  <Badge colorScheme="orange" variant="solid">
-                    Private
-                  </Badge>
-                )}
+               
               </HStack>
             </VStack>
           </Flex>

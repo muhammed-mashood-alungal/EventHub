@@ -22,9 +22,13 @@ export abstract class BaseRepository<T extends Document> {
 
   async find(
     filter: FilterQuery<T>,
-    populate: PopulateOptions = { path: "" }
+    populate?: PopulateOptions | PopulateOptions[]
   ): Promise<T[]> {
-    return this.model.find(filter).populate(populate);
+    const query = this.model.find(filter)
+    if(populate){
+      query.populate(populate)
+    }
+    return query
   }
 
   async findOne(filter: FilterQuery<T>): Promise<T | null> {
@@ -40,10 +44,11 @@ export abstract class BaseRepository<T extends Document> {
     id: Types.ObjectId,
     update: UpdateQuery<T>
   ): Promise<T | null> {
-    return this.model.findByIdAndUpdate(id, update, {
-      upsert: true,
-      new: true,
-    });
+    return this.model
+      .findByIdAndUpdate(id, update, {
+        new: true,
+      })
+      .exec();
   }
 
   async updateOne(
@@ -67,11 +72,12 @@ export abstract class BaseRepository<T extends Document> {
 
   async paginate(
     filterOptions: FilterQuery<T>,
-    page: number,
-    limit: number,
+    page: number = 1,
+    limit: number = 10,
     populate?: PopulateOptions | PopulateOptions[]
   ): Promise<T[]> {
     const skip = (page - 1) * limit;
+    console.log(skip)
     const query = this.model
       .find(filterOptions)
       .skip(skip)
@@ -82,5 +88,4 @@ export abstract class BaseRepository<T extends Document> {
     }
     return await query;
   }
-
 }

@@ -8,8 +8,6 @@ export const guestSchema = z.object({
 
 export const eventCreateSchema = z
   .object({
-    organizerId: z.string().trim().min(1, "Organizer ID is required"),
-
     title: z
       .string()
       .trim()
@@ -38,9 +36,6 @@ export const eventCreateSchema = z
 
     startTime: z.string().min(1, "Start time is required"),
     endTime: z.string().min(1, "End time is required"),
-
-    slug: z.string().trim().min(1, "Slug is required"),
-
     foodIncluded: z.coerce.boolean(),
 
     meals: z

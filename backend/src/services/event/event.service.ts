@@ -21,6 +21,7 @@ import { mapUserEventResponse } from "../../mappers/event.mapper";
 import { ITicketService } from "../ticket/ticket.interface.service";
 import { ITicketModel } from "../../models";
 import { mapTicket } from "../../mappers";
+import { Types } from "mongoose";
 
 export class EventService implements IEventService {
   constructor(
@@ -55,6 +56,7 @@ export class EventService implements IEventService {
       options,
       organizerId
     );
+    console.log(events)
     const mappedEvents = events.map(mapUserEventResponse);
     const paginatedData = paginate(
       total,
@@ -79,7 +81,6 @@ export class EventService implements IEventService {
     return paginatedData;
   }
 
-  
   async getEventBySlug(
     slug: string,
     userId: string
@@ -93,7 +94,6 @@ export class EventService implements IEventService {
     }
 
     if (event.organizerId.toString() == userId) {
-      /// my event details attaching logic here
       return mapUserEventResponse(event);
     } else {
       return mapUserEventResponse(event);
@@ -101,10 +101,10 @@ export class EventService implements IEventService {
   }
 
   async updateEvent(
-    eventId: string,
+    eventId: unknown,
     event: IEventCreate
   ): Promise<IEventResponse | null> {
-    const updatedData = await this._eventRepository.updateEvent(eventId, event);
+    const updatedData = await this._eventRepository.updateEvent(eventId as string, event);
     if (!updatedData) {
       throw createHttpsError(
         StatusCodes.NOT_FOUND,

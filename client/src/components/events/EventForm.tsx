@@ -21,6 +21,7 @@ import type { Event, EventFormData } from "../../types/events.types";
 import { eventSchema } from "../../schema/event.schema";
 import { InputField } from "../ui/Input-field";
 import "react-datepicker/dist/react-datepicker.css";
+import { categoriesNames } from "../data/categories";
 
 interface EventFormProps {
   onSubmit: (data: EventFormData) => void;
@@ -59,6 +60,8 @@ export function EventForm({
     },
   });
 
+  console.log(initialData);
+
   const foodIncluded = watch("foodIncluded");
   const meals = watch("meals");
 
@@ -68,20 +71,11 @@ export function EventForm({
   });
 
   const handleFormSubmit = (data: any) => {
-    alert("Form Submitted!");
-    console.log("HEEEELLLLO");
-    console.log(data);
     onSubmit(data);
   };
 
   const categories = createListCollection({
-    items: [
-      { label: "Conference", value: "Conference" },
-      { label: "Hackathon", value: "Hackathon" },
-      { label: "Concert", value: "Concert" },
-      { label: "Workshop", value: "Workshop" },
-      { label: "Other", value: "Other" },
-    ],
+    items: categoriesNames.map((name) => ({ label: name, value: name })),
   });
 
   return (
@@ -293,7 +287,7 @@ export function EventForm({
               </Heading>
 
               <VStack align="flex-start" gap={2}>
-                <Checkbox.Root>
+                <Checkbox.Root defaultChecked={initialData?.foodIncluded}>
                   <Checkbox.HiddenInput {...register("foodIncluded")} />
                   <Checkbox.Control>
                     <Checkbox.Indicator />
@@ -319,7 +313,10 @@ export function EventForm({
                 </Heading>
                 {(Object.keys(meals) as (keyof Event["meals"])[]).map(
                   (type) => (
-                    <Checkbox.Root ml={5}>
+                    <Checkbox.Root
+                      ml={5}
+                      defaultChecked={initialData?.meals?.[type]}
+                    >
                       <Checkbox.HiddenInput
                         {...register(`meals.${type}`)}
                         name={`meals.${type}`}

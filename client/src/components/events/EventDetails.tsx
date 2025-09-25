@@ -17,24 +17,22 @@ import {
 import { Calendar, Clock, Info, Edit, Trash2 } from "lucide-react";
 import type { Event } from "../../types/events.types";
 import CustomButton from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface EventDetailsProps {
   event: Event;
-  currentUserId: string;
+  isOrganizer: boolean;
   onRegister?: () => void;
-  onEdit?: () => void;
   onCancel?: () => void;
 }
 
 const EventDetails: React.FC<EventDetailsProps> = ({
   event,
-  currentUserId,
+  isOrganizer,
   onRegister,
-  onEdit,
   onCancel,
 }) => {
-  const isOrganizer = event.organizerId === currentUserId;
-
+  const navigate = useNavigate();
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
       Hackathon: "purple",
@@ -79,18 +77,15 @@ const EventDetails: React.FC<EventDetailsProps> = ({
               <VStack align="flex-start" gap={1} pl={2}>
                 {event.guests?.map((guest, index) => (
                   <HStack key={index} gap={2}>
-                    <Badge 
-                      bg={'yellow.600'}
-                      size="md"
-                    >
+                    <Badge bg={"yellow.600"} size="md">
                       {guest.name}
                     </Badge>
-                     <Text fontSize="md" color="gray.600">
-                       {guest.role}
-                      </Text>
+                    <Text fontSize="md" color="gray.600">
+                      {guest.role}
+                    </Text>
                     {isOrganizer && (
                       <Text fontSize="sm" color="gray.600">
-                     - ( Email Id : {guest.email})
+                        - ( Email Id : {guest.email})
                       </Text>
                     )}
                   </HStack>
@@ -169,7 +164,11 @@ const EventDetails: React.FC<EventDetailsProps> = ({
                 <CustomButton
                   colorScheme="blue"
                   leftIcon={<Edit />}
-                  onClick={onEdit}
+                  onClick={() =>
+                    navigate(`/org/events/${event.slug}/edit`, {
+                      state: { event },
+                    })
+                  }
                 >
                   Edit Event
                 </CustomButton>

@@ -1,0 +1,1 @@
+export const categoriesNames = ["Hackathon", "Concert", "Conference", "Workshop", "Other"];

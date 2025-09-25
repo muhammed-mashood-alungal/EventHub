@@ -12,31 +12,53 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import { Edit, X } from "lucide-react";
-
 import type { Event } from "../../types/events.types";
 import EventDetails from "../../components/events/EventDetails";
 import ManageEvent from "../../components/events/EventManagement";
 import ReusableTable from "../../components/ui/table";
-import CustomButton from "../../components/ui/button";
 import type { TableColumn } from "../../types/common.types";
+import { EventService } from "../../services/event.service";
+import { useErrorHandler } from "../../hooks/useErrorHandler";
+import { useParams } from "react-router-dom";
+import { useAuth } from "../../contexts/auth.context";
 
 interface EventManagementProps {
-  event: Event;
   currentUserId: string;
 }
 
-const EventPage: React.FC<EventManagementProps> = ({
-  event,
-  currentUserId,
-}) => {
-  useEffect(() => {
-    console.log("Event page loaded");
-  }, []);
-  const [eventData, setEventData] = useState<Event>(event);
-  const isOrganizer = eventData.organizerId === currentUserId;
+const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
+  const [eventData, setEventData] = useState<Event>();
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const handleError = useErrorHandler();
+  const slug = useParams().slug;
 
-  // Event handlers
+  useEffect(() => {
+    if (!slug) return;
+    if (!user) return;
+    const fetchEvent = async () => {
+      try {
+        setLoading(true);
+        const event = await EventService.getEventBySlug(slug);
+        setEventData(event);
+        console.log(event);
+        console.log(user);
+        console.log(user?.id, ((event as any)?.organizer as any)?.id);
+      } catch (error) {
+        handleError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvent();
+  }, [slug, user]);
+
+
+  if (loading) return <div>Loading...</div>;
+
+  const isOrganizer = eventData?.organizer.id === currentUserId;
+
   const handleRegister = () => console.log("Register for event");
   const handleEdit = () => console.log("Edit event");
   const handleCancel = () => console.log("Cancel event");
@@ -45,7 +67,6 @@ const EventPage: React.FC<EventManagementProps> = ({
   const handleServeLunch = () => console.log("Serve lunch");
   const handleServeDinner = () => console.log("Serve dinner");
 
-  // Table columns for participant list
   const participantColumns: TableColumn[] = [
     { header: "Name", accessor: "name" },
     { header: "Email", accessor: "email" },
@@ -59,7 +80,7 @@ const EventPage: React.FC<EventManagementProps> = ({
         </Badge>
       ),
     },
-    ...(eventData.meals.breakfast
+    ...(eventData?.meals.breakfast
       ? [
           {
             header: "Breakfast",
@@ -72,7 +93,7 @@ const EventPage: React.FC<EventManagementProps> = ({
           },
         ]
       : []),
-    ...(eventData.meals.lunch
+    ...(eventData?.meals.lunch
       ? [
           {
             header: "Lunch",
@@ -85,7 +106,7 @@ const EventPage: React.FC<EventManagementProps> = ({
           },
         ]
       : []),
-    ...(eventData.meals.dinner
+    ...(eventData?.meals.dinner
       ? [
           {
             header: "Dinner",
@@ -106,16 +127,15 @@ const EventPage: React.FC<EventManagementProps> = ({
         <VStack gap={8} align="stretch">
           {/* Event Details */}
           <EventDetails
-            event={eventData}
-            currentUserId={currentUserId}
+            event={eventData!}
+            isOrganizer={isOrganizer}
             onRegister={handleRegister}
-            onEdit={handleEdit}
             onCancel={handleCancel}
           />
           {/* Manage Event - Only for organizers */}
           {isOrganizer && (
             <ManageEvent
-              event={eventData}
+              event={eventData!}
               onMarkAttendance={handleMarkAttendance}
               onServeBreakfast={handleServeBreakfast}
               onServeLunch={handleServeLunch}
@@ -131,51 +151,11 @@ const EventPage: React.FC<EventManagementProps> = ({
                     Participant List
                   </Heading>
                   <ReusableTable
-                    data={eventData.guests}
+                    data={eventData?.guests}
                     columns={participantColumns}
                   />
                 </CardBody>
               </CardRoot>
-
-              {/* Action Buttons */}
-              {/* <Card.Root>
-                <Card.Body>
-                  <VStack gap={4}>
-                    <Heading size="md" color="gray.700">
-                      Actions
-                    </Heading>
-                    <HStack justify="center" wrap="wrap" gap={4}>
-                      <CustomButton
-                        colorScheme="purple"
-                        onClick={handleViewReports}
-                      >
-                        View Reports
-                      </CustomButton>
-                      <CustomButton
-                        colorScheme="teal"
-                        onClick={handleExportCSV}
-                      >
-                        Export CSV
-                      </CustomButton>
-                      <CustomButton
-                        colorScheme="blue"
-                        leftIcon={<Edit />}
-                        onClick={handleEditEvent}
-                      >
-                        Edit Event
-                      </CustomButton>
-                      <CustomButton
-                        colorScheme="red"
-                        variant="outline"
-                        leftIcon={<X />}
-                        onClick={handleCloseRegistration}
-                      >
-                        Close Registration
-                      </CustomButton>
-                    </HStack>
-                  </VStack>
-                </Card.Body>
-              </Card.Root> */}
             </VStack>
           )}
         </VStack>

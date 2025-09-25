@@ -30,7 +30,7 @@ eventRouter.get(
   eventController.getMyEvents.bind(eventController)
 );
 eventRouter.put(
-  "/:id",
+  "/:eventId",
   authMiddleware,
   isOrganizer,
   validateSchema(eventUpdateSchema),

@@ -41,14 +41,14 @@ export interface IEventRegistration {
 }
 
 export interface IEventFilterOptions extends IPaginationFilters {
-  title?: Object;
-  status: "upcoming" | "past";
-  category?: "Hackathon" | "Concert" | "Conference" | "Workshop" | "Other";
+  search?: Object;
+  status: "upcoming" | "completed" | 'ongoing';
+  category?: "Hackathon" | "Concert" | "Conference" | "Workshop" | "Other" | "All";
 }
 
 export interface IEventResponse extends Omit<IEvent, "_id" | "organizerId"> {
   id : string;
-  status  : 'upcoming' | 'past' | 'ongoing'
+  status  : 'upcoming' | 'completed' | 'ongoing'
   organizer : IUserResponse;
 }
 

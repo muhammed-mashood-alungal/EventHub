@@ -11,7 +11,7 @@ import { createHttpsError, toObjectId } from "../../utils";
 import { BaseRepository } from "../base.repository";
 import { IEventRepository } from "./event.interface.respository";
 import { ERROR } from "../../constants";
-import { FilterQuery } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 
 export class EventRepository
   extends BaseRepository<IEventModel>
@@ -41,19 +41,34 @@ export class EventRepository
     organizerId: string
   ): Promise<{ events: IEventModel[]; total: number }> {
     const filter = this._generateFilter(options);
-    const events = await this.find({ organizerId });
-    const total = await this.model.countDocuments(filter);
+    const events = await this.find({ organizerId, ...filter });
+    //   { organizerId, ...filter },
+    //   options.page,
+    //   options.limit,
+    //   {
+    //     path: "organizerId",
+    //   }
+    // );
+    const total = await this.model.countDocuments({ organizerId, ...filter });
+    console.log(events, total);
     return { events, total };
   }
   async getEventBySlug(slug: string): Promise<IEventModel | null> {
     return await this.findOne({ slug });
   }
   async updateEvent(
-    eventId: string,
+    eventId: unknown,
     event: IEventUpdate
   ): Promise<IEventModel | null> {
-    return await this.findByIdAndUpdate(toObjectId(eventId), event);
+    console.log(eventId);
+    console.log(event);
+    const eventData = await this.findByIdAndUpdate(
+      eventId as Types.ObjectId,
+      event
+    );
+    return eventData;
   }
+
   async registerEvent(
     registrationData: IEventRegistration
   ): Promise<IEventModel> {
@@ -76,19 +91,24 @@ export class EventRepository
 
   _generateFilter(options: IEventFilterOptions) {
     const filter: FilterQuery<IEventModel> = {};
-    if (options.title) {
-      filter.title = { $regex: options.title, $options: "i" };
+    if (options.search) {
+      filter.title = { $regex: options.search, $options: "i" };
     }
-    if (options.category) {
+    if (options.category && options.category != "All") {
       filter.category = options.category;
     }
+
+    const now = new Date().toISOString().slice(0, 16);
     if (options.status === "upcoming") {
-      filter.status = "upcoming";
-      filter.startTime = { $gt: new Date() };
-    } else if (options.status === "past") {
-      filter.status = "past";
-      filter.endTime = { $lt: new Date() };
+      filter.startTime = { $gt: now };
+    } else if (options.status === "completed") {
+      filter.endTime = { $lt: now };
+    } else if (options.status === "ongoing") {
+      filter.startTime = { $lte: now };
+      filter.endTime = { $gte: now };
     }
+
+    console.log(options.status, filter);
     return filter;
   }
 }

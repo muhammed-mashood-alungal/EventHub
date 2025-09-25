@@ -30,8 +30,8 @@ const SignupForm: React.FC<{ role: IRoles }> = ({ role }) => {
   const { setAuth } = useAuth();
   const handleError = useErrorHandler();
   const { notifySuccess } = useToastNotifier();
-  const from = location.state?.from?.pathname || "/dashboard";
-  
+  const from = location.state?.from?.pathname || "/";
+
   const {
     register,
     handleSubmit,
@@ -46,7 +46,10 @@ const SignupForm: React.FC<{ role: IRoles }> = ({ role }) => {
   const onSubmit = async (data: SignupFormData) => {
     try {
       const { confirmPassword, ...submitData } = data;
-      const { token, user, message } = await AuthService.register(submitData);
+      const { token, user, message } = await AuthService.register({
+        ...submitData,
+        role: role,
+      });
       setAuth(user, token);
       notifySuccess(message);
       navigate(from, { replace: true });

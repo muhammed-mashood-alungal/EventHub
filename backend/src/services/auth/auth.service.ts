@@ -21,7 +21,9 @@ import { mapUserResponse } from "../../mappers/user.mapper";
 export class AuthService implements IAuthService {
   constructor(private userRepository: IUserRepository) {}
 
-  async signup(userData: IUserSignupPayload): Promise<{ token: string }> {
+  async signup(
+    userData: IUserSignupPayload
+  ): Promise<{ token: string; user: IUserResponse }> {
     const existingUser = await this.userRepository.findUserByEmail(
       userData.email
     );
@@ -34,10 +36,12 @@ export class AuthService implements IAuthService {
     const payload = { id: newUser._id.toString(), role: newUser.role };
 
     const token = generateToken(payload);
-    return { token };
+    return { token, user: mapUserResponse(newUser) };
   }
 
-  async signin(loginData: IUserSigninPayload): Promise<{ token: string }> {
+  async signin(
+    loginData: IUserSigninPayload
+  ): Promise<{ token: string; user: IUserResponse }> {
     const user = await this.userRepository.findUserByEmail(loginData.email);
     if (!user) {
       throw createHttpsError(StatusCodes.NOT_FOUND, ERROR.USER.NOT_FOUND);
@@ -56,10 +60,9 @@ export class AuthService implements IAuthService {
         ERROR.USER.INACTIVE_ACCOUNT
       );
     }
-
     const payload = { id: user._id.toString(), role: user.role };
     const token = generateToken(payload);
-    return { token };
+    return { token, user: mapUserResponse(user) };
   }
 
   async authMe(token: string): Promise<IUserResponse | null> {

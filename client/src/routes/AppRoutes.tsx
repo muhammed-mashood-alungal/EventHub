@@ -8,9 +8,13 @@ import { useEffect } from "react";
 import OrganizerDashboard from "../pages/organizer/HomePage";
 import MyEvents from "../pages/organizer/MyEventsPage";
 import CreateEvent from "../pages/organizer/CreateEventPage";
-import EventPage from "../pages/organizer/EventPage";
+import EventPage from "../pages/common/EventPage";
 import { sampleEvents } from "../components/events/sample";
 import QRScanner from "../components/qr/QrScanner";
+import { ProtectedRoute } from "./ProtectedRoute";
+import EditEventPage from "../pages/organizer/EditEventPage";
+import UserLayout from "../layouts/UserLayout";
+import AllEventsPage from "../pages/user/AllEventsPage";
 
 export default function AppRoutes() {
   const { isAuthenticated, authLoading, user } = useAuth();
@@ -54,21 +58,39 @@ export default function AppRoutes() {
           </PublicRoute>
         }
       />
-            <Route
+      <Route
         path="/sample"
-        element={
-            <QRScanner onScan={()=>console.log('scenner')} />
-        }
+        element={<QRScanner onScan={() => console.log("scenner")} />}
       />
 
+      <Route
+        path="/events/:slug"
+        element={
+          <ProtectedRoute
+            isLoading={authLoading}
+            isAuthenticated={isAuthenticated}
+            allowedRoles={["user", "organizer"]}
+          >
+            <EventPage currentUserId={user?.id as string} />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="/" element={<UserLayout />}>
+        <Route path="events" element={<AllEventsPage />} />
+        <Route
+          path="events/:slug"
+          element={<EventPage currentUserId={user?.id as string} />}
+        />
+      </Route>
 
       <Route path="/org" element={<OrganizerLayout />}>
         <Route path="dashboard" element={<OrganizerDashboard />} />
         <Route path="events" element={<MyEvents />} />
         <Route path="events/create" element={<CreateEvent />} />
+        <Route path="events/:slug/edit" element={<EditEventPage />} />
         <Route
-          path="events/123"
-          element={<EventPage event={sampleEvents[0]} currentUserId="org1" />}
+          path="events/:slug"
+          element={<EventPage currentUserId={user?.id as string} />}
         />
       </Route>
 

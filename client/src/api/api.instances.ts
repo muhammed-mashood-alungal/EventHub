@@ -8,9 +8,10 @@ const createAxiosInstance = (baseUrl: string) => {
 
   instance.interceptors.request.use(
     (config) => {
-      const token =
-        typeof window !== "undefined" ? localStorage.getItem("event_hub_token") : null;
+      const token = localStorage.getItem("event_hub_token")
+      console.log('Token ---------' , token)
       if (token && config.headers) {
+        console.log("Adding auth token to request");
         config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
@@ -26,6 +27,11 @@ const createAxiosInstance = (baseUrl: string) => {
 const authInstance = createAxiosInstance(
   `${import.meta.env.VITE_BACKEND_URL}/auth`
 );
+const eventInstance = createAxiosInstance(
+  `${import.meta.env.VITE_BACKEND_URL}/events`
+);
+const ticketInstance = createAxiosInstance(
+  `${import.meta.env.VITE_BACKEND_URL}/tickets`
+);
 
-
-export { authInstance, };
+export { authInstance, eventInstance, ticketInstance };
