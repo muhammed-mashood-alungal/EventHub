@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { ERROR } from "../constants/error-messages";
 
 export const guestSchema = z.object({
-  name: z.string().trim().min(1, "Guest name is required"),
-  email: z.string().trim().email("Invalid email"),
-  role: z.string().trim().min(1, "Guest role is required"),
+  name: z.string().trim().min(1, ERROR.EVENT.GUEST_NAME_REQUIRED),
+  email: z.string().trim().email(ERROR.EVENT.GUEST_EMAIL_INVALID),
+  role: z.string().trim().min(1, ERROR.EVENT.GUEST_ROLE_REQUIRED),
 });
 
 export const eventSchema = z
@@ -11,18 +12,18 @@ export const eventSchema = z
     title: z
       .string()
       .trim()
-      .min(1, "Title is required")
-      .max(200, "Title must be less than 200 characters"),
+      .min(1, ERROR.EVENT.TITLE_REQUIRED)
+      .max(200, ERROR.EVENT.TITLE_MAX),
     description: z
       .string()
       .trim()
-      .min(1, "Description is required")
-      .max(1000, "Description must be less than 1000 characters"),
+      .min(1, ERROR.EVENT.DESCRIPTION_REQUIRED)
+      .max(1000, ERROR.EVENT.DESCRIPTION_MAX),
     venue: z
       .string()
       .trim()
-      .min(1, "Venue is required")
-      .max(200, "Venue must be less than 200 characters"),
+      .min(1, ERROR.EVENT.VENUE_REQUIRED)
+      .max(200, ERROR.EVENT.VENUE_MAX),
     category: z.enum([
       "Hackathon",
       "Concert",
@@ -30,8 +31,8 @@ export const eventSchema = z
       "Workshop",
       "Other",
     ]),
-    startTime: z.string().min(1, "Start time is required"),
-    endTime: z.string().min(1, "End time is required"),
+    startTime: z.string().min(1, ERROR.EVENT.START_TIME_REQUIRED),
+    endTime: z.string().min(1, ERROR.EVENT.END_TIME_REQUIRED),
     foodIncluded: z.coerce.boolean() as z.ZodBoolean,
     meals: z.object({
       breakfast: z.coerce.boolean() as z.ZodBoolean,
@@ -40,25 +41,21 @@ export const eventSchema = z
       drinks: z.coerce.boolean() as z.ZodBoolean,
     }),
     guests: z.array(guestSchema).optional(),
-    capacity: z.coerce.number().min(3, "Minimum 3 Seats Needed") as z.ZodNumber,
+    capacity: z.coerce.number().min(3, ERROR.EVENT.MIN_CAPACITY) as z.ZodNumber,
   })
   .refine((data) => new Date(data.endTime) > new Date(data.startTime), {
-    message: "End time must be after start time",
+    message: ERROR.EVENT.END_TIME_AFTER,
     path: ["endTime"],
   })
   .refine(
     (data) => {
-      console.log(data);
       if (data.foodIncluded) {
-        console.log(data.meals);
-
-        //return Object.values(data.meals).some((meal) => meal === true);
         return Object.values(data.meals).some(Boolean);
       }
       return true;
     },
     {
-      message: "At least one meal must be selected when food is included",
+      message: ERROR.EVENT.MEAL_REQUIRED,
       path: ["foodIncluded"],
     }
   );

@@ -3,10 +3,8 @@ import {
   Badge,
   VStack,
   HStack,
-  Card,
   CardBody,
   Heading,
-  Tag,
   TagLabel,
   Wrap,
   WrapItem,
@@ -49,10 +47,6 @@ export function EventCard({ event }: EventCardProps) {
     return colors[category] || "gray";
   };
 
-  const getStatusColor = (status: string) => {
-    return status === "upcoming" ? "green" : "gray";
-  };
-
   return (
     <CardRoot
       bg="white"
@@ -81,10 +75,6 @@ export function EventCard({ event }: EventCardProps) {
                 <Badge colorScheme={getCategoryColor(event.category)} variant="subtle">
                   {event.category}
                 </Badge>
-                {/* <Badge colorScheme={getStatusColor(event.status)} variant="outline">
-                  {event.status}
-                </Badge> */}
-               
               </HStack>
             </VStack>
           </Flex>
@@ -94,7 +84,6 @@ export function EventCard({ event }: EventCardProps) {
             {event.description}
           </Text>
 
-          {/* <Divider /> */}
          <hr />
           {/* Event Details */}
           <VStack align="stretch" gap={2}>

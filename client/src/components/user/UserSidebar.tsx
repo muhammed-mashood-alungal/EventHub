@@ -4,7 +4,6 @@ import {
   Text,
   Icon,
   Button,
-  Separator,
   useBreakpointValue,
   Drawer,
   IconButton,
@@ -13,7 +12,7 @@ import {
   CloseButton,
 } from "@chakra-ui/react";
 import { FaBars } from "react-icons/fa";
-import { FiHome, FiUser, FiShield } from "react-icons/fi";
+import { FiHome, FiUser } from "react-icons/fi";
 
 interface SidebarProps {
   activeSection: "tickets" | "events";

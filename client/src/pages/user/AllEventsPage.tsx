@@ -1,4 +1,4 @@
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import {  Flex, Heading } from "@chakra-ui/react";
 import { EventsList } from "../../components/events/EventsList";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -7,7 +7,6 @@ import { EventService } from "../../services/event.service";
 import type { IPagination } from "../../types/common.types";
 
 function AllEventsPage() {
-  const navigate = useNavigate();
   const [events, setEvents] = useState<any[]>([]);
   const [pagination, setPagination] = useState<IPagination | null>(null);
   const [isLoading, setIsLoading] = useState(true);

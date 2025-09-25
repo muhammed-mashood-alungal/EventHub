@@ -3,13 +3,12 @@ import { PublicRoute } from "./PublicRoute";
 import { useAuth } from "../contexts/auth.context";
 import LoginPage from "../pages/auth/SignInPage";
 import SignupPage from "../pages/auth/SignupPage";
-import OrganizerLayout from "../layouts/OrganizerLayout";
-import { useEffect } from "react";
+import OrganizerLayout from "../components/layouts/OrganizerLayout";
 import MyEvents from "../pages/organizer/MyEventsPage";
 import CreateEvent from "../pages/organizer/CreateEventPage";
 import EventPage from "../pages/common/EventPage";
 import EditEventPage from "../pages/organizer/EditEventPage";
-import UserLayout from "../layouts/UserLayout";
+import UserLayout from "../components/layouts/UserLayout";
 import AllEventsPage from "../pages/user/AllEventsPage";
 import MyTicketsPage from "../pages/user/MyTickets";
 import { ProtectedRoute } from "./ProtectedRoute";
@@ -17,10 +16,6 @@ import Unauthorized from "../pages/common/Unthorized";
 
 export default function AppRoutes() {
   const { isAuthenticated, authLoading, user } = useAuth();
-  useEffect(() => {
-    console.log("Auth Loading:", authLoading);
-    console.log("Is Authenticated:", isAuthenticated);
-  }, [authLoading, isAuthenticated]);
 
   return (
     <Routes>
@@ -83,7 +78,7 @@ export default function AppRoutes() {
           element={<EventPage currentUserId={user?.id as string} />}
         />
       </Route>
-        <Route path="/unauthorized" element={<Unauthorized/>} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="*" element={<div>Page Not Found</div>} />
     </Routes>
   );

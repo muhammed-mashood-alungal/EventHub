@@ -15,8 +15,6 @@ interface ReusableButtonProps {
 const CustomButton: React.FC<ReusableButtonProps> = ({
   children,
   colorScheme = "blue",
-  variant = "solid",
-  size = "md",
   isDisabled = false,
   onClick,
   loading = false,

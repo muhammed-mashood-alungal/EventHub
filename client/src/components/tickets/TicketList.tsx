@@ -129,7 +129,6 @@ const TicketList: React.FC = () => {
             </CardRoot>
           </VStack>
 
-          {/* Ticket Display Modal/Component */}
           {showTicketModal && selectedTicket && (
             <TicketDisplay
               ticket={selectedTicket}

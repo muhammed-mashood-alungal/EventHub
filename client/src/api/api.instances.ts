@@ -9,9 +9,7 @@ const createAxiosInstance = (baseUrl: string) => {
   instance.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem("event_hub_token")
-      console.log('Token ---------' , token)
       if (token && config.headers) {
-        console.log("Adding auth token to request");
         config.headers.Authorization = `Bearer ${token}`;
       }
       return config;

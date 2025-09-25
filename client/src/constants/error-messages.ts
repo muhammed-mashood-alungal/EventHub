@@ -9,6 +9,21 @@ export const ERROR = {
     ORGANIZATION_NAME_REQUIRED: "Organization name required",
     ORGANIZATION_ADDRESS_REQUIRED: "Organization address required",
     INVALID_WEBSITE_URL: "Invalid website URL",
-    
+  },
+  EVENT: {
+    TITLE_REQUIRED: "Title is required",
+    TITLE_MAX: "Title must be less than 200 characters",
+    DESCRIPTION_REQUIRED: "Description is required",
+    DESCRIPTION_MAX: "Description must be less than 1000 characters",
+    VENUE_REQUIRED: "Venue is required",
+    VENUE_MAX: "Venue must be less than 200 characters",
+    START_TIME_REQUIRED: "Start time is required",
+    END_TIME_REQUIRED: "End time is required",
+    END_TIME_AFTER: "End time must be after start time",
+    MIN_CAPACITY: "Minimum 3 Seats Needed",
+    MEAL_REQUIRED: "At least one meal must be selected when food is included",
+    GUEST_NAME_REQUIRED: "Guest name is required",
+    GUEST_EMAIL_INVALID: "Invalid email",
+    GUEST_ROLE_REQUIRED: "Guest role is required",
   },
 } as const;

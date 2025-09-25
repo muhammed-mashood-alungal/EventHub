@@ -1,35 +1,39 @@
 import { useEffect, useState } from "react";
 import { Box, useBreakpointValue } from "@chakra-ui/react";
-import { OrganizerSidebar } from "../components/organizer/OrganizerSidebar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { UserSidebar } from "../user/UserSidebar";
 
-const OrganizerLayout = () => {
-  const [activeSection, setActiveSection] = useState<"events">(
+const UserLayout = () => {
+  const [activeSection, setActiveSection] = useState<"tickets" | "events">(
     "events"
   );
   const location = useLocation();
   const navigate = useNavigate();
- 
 
   useEffect(() => {
     if (location.pathname.includes("events")) {
       setActiveSection("events");
-    } 
+    } else if (location.pathname.includes("tickets")) {
+      setActiveSection("tickets");
+    }
   }, [location]);
 
   const sidebarWidth = useBreakpointValue({ base: 0, md: 280 });
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const handleSectionChange = (section: "events") => {
-    navigate(`/org/${section}`);
+  const handleSectionChange = (section: "events" | "tickets") => {
+    if (section == "events") {
+      navigate("/");
+      setActiveSection("events");
+      return;
+    }
+    navigate(`/${section}`);
   };
-
-  
 
   return (
     <Box position="relative" minH="100vh">
       {/* Sidebar */}
-      <OrganizerSidebar
+      <UserSidebar
         activeSection={activeSection}
         onSectionChange={handleSectionChange}
       />
@@ -46,4 +50,4 @@ const OrganizerLayout = () => {
   );
 };
 
-export default OrganizerLayout;
+export default UserLayout;

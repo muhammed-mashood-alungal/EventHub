@@ -25,7 +25,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setAuthLoading(true);
       const { user } = await AuthService.authMe();
-      console.log('User fetched: ', user);
       setAuth(user);
       setIsAuthenticated(true);
     } catch (error) {
@@ -40,7 +39,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(user);
     setIsAuthenticated(true);
     setAuthLoading(false);
-    console.log('SEttting token in local storage: ', token);
     if (token) {
       localStorage.setItem("event_hub_token", token);
     }

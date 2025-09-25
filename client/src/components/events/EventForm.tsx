@@ -21,7 +21,7 @@ import type { Event, EventFormData } from "../../types/events.types";
 import { eventSchema } from "../../schema/event.schema";
 import { InputField } from "../ui/Input-field";
 import "react-datepicker/dist/react-datepicker.css";
-import { categoriesNames } from "../data/categories";
+import { categoriesNames } from "../../data/categories";
 
 interface EventFormProps {
   onSubmit: (data: EventFormData) => void;

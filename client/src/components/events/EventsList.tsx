@@ -18,7 +18,7 @@ import type { Event } from "../../types/events.types";
 import { EventCard } from "./EventCard";
 import { Pagination } from "../common/Pagination";
 import type { IPagination } from "../../types/common.types";
-import { categoriesNames } from "../data/categories";
+import { categoriesNames } from "../../data/categories";
 import CustomSelect from "../ui/drop-down";
 import { useNavigate } from "react-router-dom";
 
@@ -59,7 +59,6 @@ export function EventsList({
   };
 
   const navigate = useNavigate();
-
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -271,8 +270,6 @@ export function EventsList({
               />
             </Flex>
           )}
-
-
         </VStack>
       </Container>
     </Box>
