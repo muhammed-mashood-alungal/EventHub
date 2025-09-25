@@ -21,11 +21,10 @@ export class AuthController implements IAuthController {
 
   async signin(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { token , user} = await this._authServices.signin(req.body);
-
+      const { token, user } = await this._authServices.signin(req.body);
       successResponse(res, StatusCodes.OK, SUCCESS.USER.SIGNIN_SUCCESS, {
         token,
-        user
+        user,
       });
     } catch (error) {
       next(error);
@@ -35,8 +34,9 @@ export class AuthController implements IAuthController {
   async authMe(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const token = req.headers.authorization?.split(" ")[1]!;
+      
       const user = await this._authServices.authMe(token);
-      successResponse(res, StatusCodes.OK, ReasonPhrases.OK ,{
+      successResponse(res, StatusCodes.OK, ReasonPhrases.OK, {
         user,
       });
     } catch (error) {
@@ -48,11 +48,7 @@ export class AuthController implements IAuthController {
     try {
       const token = req.headers.authorization?.split(" ")[1]!;
       await this._authServices.logout(token);
-      successResponse(
-        res,
-        StatusCodes.NO_CONTENT,
-        SUCCESS.USER.LOGOUT_SUCCESS
-      );
+      successResponse(res, StatusCodes.NO_CONTENT, SUCCESS.USER.LOGOUT_SUCCESS);
     } catch (error) {
       next(error);
     }

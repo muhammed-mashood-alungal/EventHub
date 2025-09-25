@@ -1,36 +1,46 @@
-import {transporter} from "../configs";
+import { transporter } from "../configs";
 
-const sendEmail = async (to: string | string[], subject: string, html: string) => {
+const sendEmail = async (
+  to: string | string[],
+  subject: string,
+  html: string
+) => {
   try {
     await transporter.sendMail({
-      from: '', 
+      from: "",
       to,
       subject,
       html,
     });
   } catch (error) {
     console.error(error);
-    throw new Error('Error sending email');
+    throw new Error("Error sending email");
   }
 };
-
 
 export const sendEventRegistrationEmail = async (
   email: string,
   eventName: string,
-  qrCode: string,       
+  qrCodelink: string,
   uniqueCode: string
 ) => {
   const html = `
-    <h1>Registration Successful </h1>
+    <h1>Registration Successful 🎉</h1>
     <p>Hi, you have successfully registered for <b>${eventName}</b>.</p>
-    <p>Please find your ticket below:</p>
-    <p><img src="${qrCode}" alt="QR Code" style="width:200px;height:200px;" /></p>
-    <p>If you are unable to scan the QR code, use this unique code at the event:</p>
-    <h2>${uniqueCode}</h2>
+
+    <p>You can view and download your ticket (with QR code) directly from your dashboard:</p>
+    <p>
+      <a href="${qrCodelink}" target="_blank" style="display:inline-block;padding:10px 20px;background:#4F46E5;color:white;text-decoration:none;border-radius:6px;font-weight:bold;">
+        View My Ticket
+      </a>
+    </p>
+
+    <p>If needed, you can also use this unique code at the event:</p>
+    <h2 style="color:#111827;font-family:monospace;">${uniqueCode}</h2>
+
     <p>Keep this information safe and do not share it with anyone.</p>
-    <p>--- Event Management Team</p>
+    <p style="margin-top:20px;">— Event Management Team</p>
   `;
-  
+
   await sendEmail(email, `Your Ticket for ${eventName}`, html);
 };

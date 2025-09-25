@@ -12,7 +12,6 @@ export const validateSchema = (schema: ZodType<any, any, any>) => {
         .map((issue) => issue.message)
         .join(", ");
 
-    console.log(result.error)
       return errorResponse(res, StatusCodes.BAD_REQUEST, errors);
     }
 

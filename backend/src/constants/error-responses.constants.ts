@@ -1,5 +1,4 @@
 export const ERROR = {
-  COMMON: {},
   USER: {
     USERNAME_TOO_SHORT: "Username must be at least 3 characters",
     INVALID_EMAIL: "Invalid email address",
@@ -28,14 +27,33 @@ export const ERROR = {
     EVENT_NOT_FOUND: "Event Not Found",
     SEAT_FILLED: "Event Seat Filled",
     EVENT_EXISTS: "Event With Same title Exists Already for you.",
+    GUEST_NAME_REQ: "Guest name is required",
+    GUEST_EMAIL_REQ: "A valid guest email is required",
+    ROLE_REQ: "Guest role is required",
+
+    TITLE_REQ: "Event title is required",
+    TITLE_MAX_200: "Event title must not exceed 200 characters",
+
+    DESCRIPTION_REQ: "Event description is required",
+    DESCRIPTION_MAX_1000: "Event description must not exceed 1000 characters",
+
+    VENUE_REQ: "Event venue is required",
+    VENUE_MAX_200: "Event venue must not exceed 200 characters",
+
+    START_TIME_REQ: "Start time is required",
+    END_TIME_REQ: "End time is required",
+    END_TIME_AFTER_START_TIME: "End time must be after start time",
+
+    MIN_3_SEAT: "Event capacity must be at least 3 seats",
+    CAPACITY_TOO_LARGE: "Event capacity cannot exceed 100000 seats",
   },
   TICKET: {
-    ALREADY_REGISTERED : 'Ticket Already Registered',
+    ALREADY_REGISTERED: "Ticket Already Registered",
     NOT_FOUND: "Ticket not found",
     ATTENDENCE_ALREADY_MARKED: "Attendance already marked",
     FOOD_SERVED_ALREADY: (foodType: string) =>
       `${foodType} Food served already for this Attendee`,
-    INVALID_QR : "Invalid QR Code, Try Another One",
-    INVALID_TICKET :  "Invalid Ticket" 
+    INVALID_QR: "Invalid QR Code, Try Another One",
+    INVALID_TICKET: "Invalid Ticket",
   },
 } as const;

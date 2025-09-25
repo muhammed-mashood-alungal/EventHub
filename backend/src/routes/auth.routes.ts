@@ -28,4 +28,4 @@ authRouter.get(
 );
 authRouter.post("/logout", authController.logout.bind(authController));
 
-export default authRouter;
+

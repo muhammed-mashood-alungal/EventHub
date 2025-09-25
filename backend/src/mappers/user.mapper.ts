@@ -1,5 +1,5 @@
 import { IUserModel } from "../models";
-import { IUser, IUserResponse } from "../types";
+import { IUserResponse } from "../types";
 
 export const mapUserResponse = (user: IUserModel): IUserResponse => {
   return {

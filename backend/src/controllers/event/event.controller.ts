@@ -93,8 +93,7 @@ export class EventController implements IEventController {
     try {
       const eventData = req.body;
       const { eventId } = req.params;
-      console.log(eventId);
-      console.log(req.params);
+     
       const event = await this._eventService.updateEvent(eventId, eventData);
       successResponse(res, StatusCodes.OK, SUCCESS.EVENT.UPDATED, { event });
     } catch (error) {

@@ -77,7 +77,6 @@ export abstract class BaseRepository<T extends Document> {
     populate?: PopulateOptions | PopulateOptions[]
   ): Promise<T[]> {
     const skip = (page - 1) * limit;
-    console.log(skip)
     const query = this.model
       .find(filterOptions)
       .skip(skip)

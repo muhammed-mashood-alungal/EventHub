@@ -149,7 +149,6 @@ export class TicketService implements ITicketService {
       eventId,
       userId
     );
-    console.log(ticket);
     return !!ticket;
   }
 

@@ -1,10 +1,8 @@
 import { StatusCodes } from "http-status-codes";
-import { ITicketModel, IUserModel, Ticket } from "../../models";
+import { ITicketModel, Ticket } from "../../models";
 import {
   FoodType,
-  IEventFilterOptions,
   IEventStats,
-  ITicket,
   ITicketCreate,
   ITicketFilterOptions,
 } from "../../types";
@@ -12,7 +10,6 @@ import { createHttpsError } from "../../utils";
 import { BaseRepository } from "../base.repository";
 import { ITicketRepository } from "./ticket.interface.repository";
 import { ERROR } from "../../constants";
-import { FilterQuery } from "mongoose";
 
 export class TicketRepository
   extends BaseRepository<ITicketModel>
@@ -108,7 +105,7 @@ export class TicketRepository
 
   async getEventStats(eventId: string): Promise<IEventStats> {
     const tickets = await this.find({ eventId });
-    console.log(tickets);
+    
     const res: IEventStats = {
       totalRegistrations: tickets.length,
       participated: 0,
@@ -122,6 +119,7 @@ export class TicketRepository
 
     for (let ticket of tickets) {
       if (ticket.attendanceMarked) res.participated++;
+
       if (ticket.foodServed) {
         for (const foodType of Object.keys(
           ticket.foodServed || {}

@@ -13,7 +13,7 @@ export const authMiddleware: RequestHandler = async (
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader?.split(" ")[1];
-    console.log("inside auth middleware =========================Token: ", token);
+    
     if (!token) {
       return next(
         createHttpsError(

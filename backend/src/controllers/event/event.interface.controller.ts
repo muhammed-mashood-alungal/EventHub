@@ -11,5 +11,4 @@ export interface IEventController {
   ): Promise<void>;
   updateEvent(req: Request, res: Response, next: NextFunction): Promise<void>;
   registerEvent(req: Request, res: Response, next: NextFunction): Promise<void>;
- 
 }

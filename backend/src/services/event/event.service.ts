@@ -5,7 +5,6 @@ import {
   IEventFilterOptions,
   IEventRegistration,
   IEventResponse,
-  IEventStats,
   IPagination,
   ITicketResponse,
 } from "../../types";
@@ -20,6 +19,7 @@ import { ERROR } from "../../constants";
 import { mapUserEventResponse } from "../../mappers/event.mapper";
 import { ITicketService } from "../ticket/ticket.interface.service";
 import { mapTicket } from "../../mappers";
+import { env } from "../../configs";
 
 export class EventService implements IEventService {
   constructor(
@@ -90,13 +90,11 @@ export class EventService implements IEventService {
         ERROR.EVENT.EVENT_NOT_FOUND
       );
     }
-    console.log('=-==========================================================================')
-    console.log(event._id.toString(), userId);
     const registered = await this._ticketService.getTicketByEventAndAttendee(
       event._id.toString(),
       userId
     );
-    
+
     return mapUserEventResponse(event, !!registered);
   }
 
@@ -135,10 +133,13 @@ export class EventService implements IEventService {
 
     await this._eventRepository.increaseRegisterCount(event.id as string);
 
+
+    const link = `${env.CLIENT_URL}/tickets`
+    
     await sendEventRegistrationEmail(
       user?.email!,
       event.title,
-      generatedTicket.qrCode as string,
+      link,
       generatedTicket.uniqueCode as string
     );
     return mapTicket(generatedTicket);

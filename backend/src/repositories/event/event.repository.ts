@@ -5,7 +5,6 @@ import {
   IEventFilterOptions,
   IEventRegistration,
   IEventUpdate,
-  IPaginationFilters,
 } from "../../types";
 import { createHttpsError, toObjectId } from "../../utils";
 import { BaseRepository } from "../base.repository";
@@ -51,18 +50,15 @@ export class EventRepository
     );
 
     const total = await this.model.countDocuments({ organizerId, ...filter });
-    console.log(events, total);
     return { events, total };
   }
   async getEventBySlug(slug: string): Promise<IEventModel | null> {
-    return await this.findOne({ slug });
+    return await this.model.findOne({ slug }).populate("organizerId");
   }
   async updateEvent(
     eventId: unknown,
     event: IEventUpdate
   ): Promise<IEventModel | null> {
-    console.log(eventId);
-    console.log(event);
     const eventData = await this.findByIdAndUpdate(
       eventId as Types.ObjectId,
       event
