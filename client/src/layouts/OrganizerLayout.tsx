@@ -24,6 +24,8 @@ const OrganizerLayout = () => {
     navigate(`/org/${section}`);
   };
 
+  
+
   return (
     <Box position="relative" minH="100vh">
       {/* Sidebar */}

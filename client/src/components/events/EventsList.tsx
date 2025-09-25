@@ -43,7 +43,7 @@ export function EventsList({
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState<string>("All");
   const [eventStatus, setEventStatus] = useState<EventStatus>("upcoming");
-  const limit = 10;
+  const limit = 6;
   const columns = useBreakpointValue({ base: 1, md: 2, lg: 3 });
 
   const categories = createListCollection({

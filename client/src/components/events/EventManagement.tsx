@@ -12,17 +12,20 @@ import {
 } from "@chakra-ui/react";
 import CustomButton from "../ui/button";
 import type { Event } from "../../types/events.types";
-import { Check } from "lucide-react";
+import { Check, QrCode, } from "lucide-react";
 import type { IEventStats } from "../../types/ticket.types";
 
 interface ManageEventProps {
   event: Event;
   onScanClick: (action: string) => void;
-  stats : IEventStats
+  stats: IEventStats;
 }
 
-const ManageEvent: React.FC<ManageEventProps> = ({ event, onScanClick  , stats}) => {
-
+const ManageEvent: React.FC<ManageEventProps> = ({
+  event,
+  onScanClick,
+  stats,
+}) => {
   return (
     <CardRoot bg={"gray.200"} color={"gray.900"} border={0}>
       <CardBody>
@@ -71,6 +74,7 @@ const ManageEvent: React.FC<ManageEventProps> = ({ event, onScanClick  , stats})
               leftIcon={<Check />}
               onClick={() => onScanClick("attendance")}
             >
+             <QrCode />
               Mark Attendance
             </CustomButton>
 
@@ -79,6 +83,7 @@ const ManageEvent: React.FC<ManageEventProps> = ({ event, onScanClick  , stats})
                 colorScheme="orange"
                 onClick={() => onScanClick("food-breakfast")}
               >
+              <QrCode />
                 Serve Breakfast
               </CustomButton>
             )}
@@ -88,6 +93,7 @@ const ManageEvent: React.FC<ManageEventProps> = ({ event, onScanClick  , stats})
                 colorScheme="yellow"
                 onClick={() => onScanClick("food-lunch")}
               >
+                <QrCode />
                 Serve Lunch
               </CustomButton>
             )}
@@ -97,6 +103,7 @@ const ManageEvent: React.FC<ManageEventProps> = ({ event, onScanClick  , stats})
                 colorScheme="red"
                 onClick={() => onScanClick("food-dinner")}
               >
+               <QrCode />
                 Serve Dinner
               </CustomButton>
             )}

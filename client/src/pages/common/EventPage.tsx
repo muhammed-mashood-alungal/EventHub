@@ -40,6 +40,7 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
   const { notifySuccess } = useToastNotifier();
   const [isQrOpen, setIsQrOpen] = useState(false);
   const [currentQrAction, setCurrentQrAction] = useState("");
+  const [isSubmitting , setIsSubmitting] = useState(false)
   const [stats, setStats] = useState<IEventStats>({
     participated: 0,
     totalRegistrations: 0,
@@ -90,7 +91,7 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
   const fetchParticipants = async () => {
     try {
       if (!eventData) return;
-      const { data, pagination } = await TicketService.getEventTickets(
+      const { data } = await TicketService.getEventTickets(
         eventData.id
       );
       setParticipants(data);
@@ -110,11 +111,14 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
 
   const handleRegister = async () => {
     try {
+      setIsSubmitting(true)
       await EventService.registerEvent(eventData?.id!, { userId: user?.id! });
       notifySuccess("Registration successful!");
       setEventData((prev) => (prev ? { ...prev, registered: true } : prev));
     } catch (error) {
       handleError(error);
+    }finally{
+      setIsSubmitting(false)
     }
   };
 
@@ -124,7 +128,8 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
     try {
       const { message } = await TicketService.validateTicket(
         qrData,
-        currentQrAction
+        currentQrAction,
+        eventData?.id!
       );
       notifySuccess(message);
       handleStatsChange();
@@ -246,6 +251,7 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
             isOrganizer={isOrganizer}
             onRegister={handleRegister}
             onCancel={handleCancel}
+            loading={isSubmitting}
           />
 
           {isOrganizer && (

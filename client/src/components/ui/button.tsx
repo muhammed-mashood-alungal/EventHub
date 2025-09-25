@@ -2,6 +2,7 @@ import { Button } from "@chakra-ui/react";
 
 interface ReusableButtonProps {
   children: React.ReactNode;
+  loading?: boolean;
   colorScheme?: string;
   variant?: string;
   size?: string;
@@ -18,19 +19,15 @@ const CustomButton: React.FC<ReusableButtonProps> = ({
   size = "md",
   isDisabled = false,
   onClick,
-  leftIcon,
-  rightIcon,
+  loading = false,
 }) => {
   return (
     <Button
+      loading={loading}
       colorScheme={colorScheme}
-    //  variant={variant}
-    //  size={size}
       disabled={isDisabled}
       onClick={onClick}
-      //leftIcon={leftIcon}
-    //  rightIcon={rightIcon}
-      _hover={{ transform: 'translateY(-1px)', shadow: 'md' }}
+      _hover={{ transform: "translateY(-1px)", shadow: "md" }}
       transition="all 0.2s"
     >
       {children}

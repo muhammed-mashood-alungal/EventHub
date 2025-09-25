@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Badge,
   Separator,
@@ -26,15 +26,18 @@ interface EventDetailsProps {
   isOrganizer: boolean;
   onRegister?: () => void;
   onCancel?: () => void;
+  loading? : boolean
 }
 
 const EventDetails: React.FC<EventDetailsProps> = ({
   event,
   isOrganizer,
   onRegister,
+  loading 
+
 }) => {
   const navigate = useNavigate();
-  console.log(event)
+  
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
       Hackathon: "purple",
@@ -73,11 +76,11 @@ const EventDetails: React.FC<EventDetailsProps> = ({
           <Flex justify="space-between" align="flex-start" wrap="wrap" gap={4}>
             <VStack align="flex-start" gap={2} flex={1} minW="250px">
               <Heading size="xl" color="gray.800" lineHeight="shorter">
-                {event.title}
+                {event?.title}
               </Heading>
               <HStack gap={2} wrap="wrap">
                 <Badge colorScheme={getCategoryColor(event.category)} size="sm">
-                  {event.category}
+                  {event?.category}
                 </Badge>
                 {getEventStatus() === "ongoing" && (
                   <Badge colorScheme="green" size="sm">
@@ -305,7 +308,8 @@ const EventDetails: React.FC<EventDetailsProps> = ({
                   colorScheme="green"
                   size="lg"
                   onClick={onRegister}
-                  isDisabled={event.registeredCount! >= event.capacity || getEventStatus() === "past"}
+                  isDisabled={event.registeredCount! >= event.capacity || getEventStatus() === "past" || event.registered}
+                  loading={loading}
                 >
                   {getEventStatus() === "past"
                     ? "Event Completed"

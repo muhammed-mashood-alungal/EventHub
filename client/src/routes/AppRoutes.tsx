@@ -12,6 +12,8 @@ import EditEventPage from "../pages/organizer/EditEventPage";
 import UserLayout from "../layouts/UserLayout";
 import AllEventsPage from "../pages/user/AllEventsPage";
 import MyTicketsPage from "../pages/user/MyTickets";
+import { ProtectedRoute } from "./ProtectedRoute";
+import Unauthorized from "../pages/common/Unthorized";
 
 export default function AppRoutes() {
   const { isAuthenticated, authLoading, user } = useAuth();
@@ -65,7 +67,14 @@ export default function AppRoutes() {
         />
       </Route>
 
-      <Route path="/org" element={<OrganizerLayout />}>
+      <Route
+        path="/org"
+        element={
+          <ProtectedRoute allowedRoles={["organizer"]}>
+            <OrganizerLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route path="events" element={<MyEvents />} />
         <Route path="events/create" element={<CreateEvent />} />
         <Route path="events/:slug/edit" element={<EditEventPage />} />
@@ -74,7 +83,7 @@ export default function AppRoutes() {
           element={<EventPage currentUserId={user?.id as string} />}
         />
       </Route>
-
+        <Route path="/unauthorized" element={<Unauthorized/>} />
       <Route path="*" element={<div>Page Not Found</div>} />
     </Routes>
   );

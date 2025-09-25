@@ -5,7 +5,6 @@ import type { IPaginationedResponse } from "../types/common.types";
 
 export const TicketService = {
   async getMyEventTickets(
-    options?: ITicketFilterOptions
   ): Promise<IPaginationedResponse<ITicket>> {
     try {
       const response = await ticketInstance.get("/my");
@@ -36,10 +35,10 @@ export const TicketService = {
     }
   },
 
-  async validateTicket(qrData: string, actionType: string): Promise<any> {
+  async validateTicket(qrData: string, actionType: string , eventId : string): Promise<any> {
     try {
       console.log(qrData, actionType);
-      const response = await ticketInstance.post("/validate", {
+      const response = await ticketInstance.post(`validate/${eventId}`, {
         qrData,
         actionType,
       });
