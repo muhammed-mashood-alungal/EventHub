@@ -121,7 +121,7 @@ export function EventCard({ event }: EventCardProps) {
                   </Text>
                 </HStack>
                 <Wrap>
-                   {Object.entries(event.meals).filter(([meal , has])=>has).map((food, index) => (
+                   {Object.entries(event.meals).filter(([_ , has])=>has).map((food, index) => (
                     <WrapItem key={index}>
                       <TagRoot size="sm" colorScheme="green" variant="subtle">
                         <TagLabel>{food}</TagLabel>

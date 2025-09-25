@@ -94,7 +94,7 @@ const TicketList: React.FC = () => {
     {
       header: "Actions",
       accessor: "id",
-      render: (id: string, ticket: ITicket) => {
+      render: (_id: string, ticket: ITicket) => {
         const status = getEventStatus(
           new Date(ticket.event.startTime),
           new Date(ticket.event.endTime)

@@ -8,9 +8,8 @@ import {
   Button,
   Icon,
   HStack,
-  Alert,
 } from "@chakra-ui/react";
-import { Shield, Home, ArrowLeft, LogIn } from "lucide-react";
+import { Shield,  } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface UnauthorizedProps {
@@ -25,7 +24,6 @@ interface UnauthorizedProps {
 const Unauthorized: React.FC<UnauthorizedProps> = ({
   message = "You don't have permission to access this resource.",
   showLoginButton = true,
-  showBackButton = true,
   showHomeButton = true,
   loginPath = "/login",
 }) => {

@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import AuthService from "../services/auth.services";
 import type { IUser } from "../types/user.types";
-import { useNavigate } from "react-router-dom";
 
 type AuthContextType = {
   user: IUser | null;
