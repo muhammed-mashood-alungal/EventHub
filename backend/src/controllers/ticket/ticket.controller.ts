@@ -34,7 +34,6 @@ export class TicketController implements ITicketController {
     try {
       const userId = req.user?.id as string;
       const options: unknown = req.query;
-      console.log('UUUUUUUUUUUERRERRR IDDDDD  '+ userId)
       const tickets = await this._ticketService.getMyEventTickets(
         options as ITicketFilterOptions,
         userId
@@ -51,9 +50,11 @@ export class TicketController implements ITicketController {
   ): Promise<void> {
     try {
       const { qrData, actionType } = req.body;
+      const { eventId } = req.params;
       const validationResult = await this._ticketService.validateTicket(
         qrData,
-        actionType
+        actionType,
+        eventId
       );
       successResponse(res, StatusCodes.OK, ReasonPhrases.OK, {
         validationResult,
@@ -63,7 +64,7 @@ export class TicketController implements ITicketController {
     }
   }
 
- async getEventRegistrationStats(
+  async getEventRegistrationStats(
     req: Request,
     res: Response,
     next: NextFunction

@@ -5,6 +5,7 @@ import {
   FoodType,
   IEventStats,
   IPagination,
+  ITicket,
   ITicketFilterOptions,
   ITicketResponse,
 } from "../../types";
@@ -29,6 +30,7 @@ export class TicketService implements ITicketService {
         eventId,
         attendeeId
       );
+
     if (existingTicket) {
       throw createHttpsError(
         StatusCodes.BAD_REQUEST,
@@ -45,6 +47,16 @@ export class TicketService implements ITicketService {
     };
     const newTicket = await this._ticketRepository.createTicket(ticketData);
     return mapTicket(newTicket);
+  }
+
+  async getTicketByEventAndAttendee(
+    eventId: string,
+    attendeeId: string
+  ): Promise<ITicket | null> {
+    return await this._ticketRepository.getTicketByEventAndAttendee(
+      eventId,
+      attendeeId
+    );
   }
 
   async getEventTickets(
@@ -97,19 +109,27 @@ export class TicketService implements ITicketService {
 
   async validateTicket(
     qrData: string,
-    actionType: string
+    actionType: string,
+    eventId: string
   ): Promise<{ success: boolean; message: string }> {
     let parsed;
     try {
       parsed = JSON.parse(qrData);
     } catch {
-      return { success: false, message: ERROR.TICKET.INVALID_QR };
+      throw createHttpsError(StatusCodes.BAD_REQUEST, ERROR.TICKET.INVALID_QR);
     }
 
     const { uniqueCode } = parsed;
     const ticket = await this._ticketRepository.findOne({ uniqueCode });
     if (!ticket)
-      return { success: false, message: ERROR.TICKET.INVALID_TICKET };
+      throw createHttpsError(
+        StatusCodes.BAD_REQUEST,
+        ERROR.TICKET.INVALID_TICKET
+      );
+
+    if (ticket.eventId != eventId) {
+      throw createHttpsError(StatusCodes.BAD_REQUEST, ERROR.TICKET.INVALID_QR);
+    }
 
     const [action, foodType] = actionType.split("-");
 
@@ -121,7 +141,7 @@ export class TicketService implements ITicketService {
       return { success: true, message: SUCCESS.EVENT.FOOD_SERVED(foodType) };
     }
 
-    return { success: false, message: ERROR.TICKET.INVALID_TICKET };
+    throw createHttpsError(StatusCodes.BAD_REQUEST, ERROR.TICKET.INVALID_QR);
   }
 
   async isUserRegistered(eventId: string, userId: string): Promise<boolean> {
@@ -129,13 +149,11 @@ export class TicketService implements ITicketService {
       eventId,
       userId
     );
-    console.log(ticket)
+    console.log(ticket);
     return !!ticket;
   }
 
-
-  async getEventStats(eventId: string) : Promise<IEventStats>{
-    return await this._ticketRepository.getEventStats(eventId)
+  async getEventStats(eventId: string): Promise<IEventStats> {
+    return await this._ticketRepository.getEventStats(eventId);
   }
-  
 }

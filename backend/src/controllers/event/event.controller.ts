@@ -55,7 +55,7 @@ export class EventController implements IEventController {
       const { slug } = req.params;
       const event = await this._eventService.getEventBySlug(
         slug,
-        req?.userId as string
+        req?.user?.id as string
       );
       successResponse(res, StatusCodes.OK, SUCCESS.COMMON.OK, {
         event,
@@ -72,7 +72,7 @@ export class EventController implements IEventController {
   ): Promise<void> {
     try {
       const options: unknown = req.query;
-      console.log(req?.user?.id)
+
       const events = await this._eventService.getMyEvents(
         options as IEventFilterOptions,
         req?.user?.id as string
@@ -93,8 +93,8 @@ export class EventController implements IEventController {
     try {
       const eventData = req.body;
       const { eventId } = req.params;
-      console.log(eventId)
-      console.log(req.params)
+      console.log(eventId);
+      console.log(req.params);
       const event = await this._eventService.updateEvent(eventId, eventData);
       successResponse(res, StatusCodes.OK, SUCCESS.EVENT.UPDATED, { event });
     } catch (error) {
@@ -122,6 +122,4 @@ export class EventController implements IEventController {
       next(error);
     }
   }
-
-   
 }

@@ -90,13 +90,14 @@ export class EventService implements IEventService {
         ERROR.EVENT.EVENT_NOT_FOUND
       );
     }
-    const registered = await this._ticketService.isUserRegistered(
-      event?._id,
+    console.log('=-==========================================================================')
+    console.log(event._id.toString(), userId);
+    const registered = await this._ticketService.getTicketByEventAndAttendee(
+      event._id.toString(),
       userId
     );
-
-    console.log(registered)
-    return mapUserEventResponse(event, registered);
+    
+    return mapUserEventResponse(event, !!registered);
   }
 
   async updateEvent(
@@ -119,7 +120,9 @@ export class EventService implements IEventService {
   async registerEvent(
     registrationData: IEventRegistration
   ): Promise<ITicketResponse> {
-    const event = await this._eventRepository.validateEventForRegistration(registrationData);
+    const event = await this._eventRepository.validateEventForRegistration(
+      registrationData
+    );
 
     const generatedTicket = await this._ticketService.generateTicket(
       registrationData.eventId.toString(),
@@ -130,8 +133,8 @@ export class EventService implements IEventService {
       registrationData.userId as string
     );
 
-    await this._eventRepository.increaseRegisterCount(event.id as string)
-    
+    await this._eventRepository.increaseRegisterCount(event.id as string);
+
     await sendEventRegistrationEmail(
       user?.email!,
       event.title,

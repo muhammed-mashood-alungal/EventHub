@@ -20,7 +20,7 @@ ticketRouter.get(
   ticketController.getEventTickets.bind(ticketController)
 );
 ticketRouter.post(
-  "/validate",
+  "/validate/:eventId",
   authMiddleware,
   isOrganizer,
   ticketController.validateTicket.bind(ticketController)

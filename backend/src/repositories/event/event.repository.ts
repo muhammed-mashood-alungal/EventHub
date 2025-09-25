@@ -41,14 +41,15 @@ export class EventRepository
     organizerId: string
   ): Promise<{ events: IEventModel[]; total: number }> {
     const filter = this._generateFilter(options);
-    const events = await this.find({ organizerId, ...filter });
-    //   { organizerId, ...filter },
-    //   options.page,
-    //   options.limit,
-    //   {
-    //     path: "organizerId",
-    //   }
-    // );
+    const events = await this.paginate(
+      { organizerId, ...filter },
+      options.page,
+      options.limit,
+      {
+        path: "organizerId",
+      }
+    );
+
     const total = await this.model.countDocuments({ organizerId, ...filter });
     console.log(events, total);
     return { events, total };
