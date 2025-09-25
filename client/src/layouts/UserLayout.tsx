@@ -6,8 +6,8 @@ import { useAuth } from "../contexts/auth.context";
 import { UserSidebar } from "../components/user/UserSidebar";
 
 const UserLayout = () => {
-  const [activeSection, setActiveSection] = useState<"dashboard" | "events">(
-    "dashboard"
+  const [activeSection, setActiveSection] = useState<"tickets" | "events">(
+    "events"
   );
   const location = useLocation();
   const navigate = useNavigate();
@@ -15,6 +15,8 @@ const UserLayout = () => {
   useEffect(() => {
     if (location.pathname.includes("events")) {
       setActiveSection("events");
+    }else if(location.pathname.includes('tickets')){
+      setActiveSection('tickets')
     }
   }, [location]);
 

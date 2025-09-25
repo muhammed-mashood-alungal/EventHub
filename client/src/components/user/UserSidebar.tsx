@@ -16,7 +16,7 @@ import { FaBars } from "react-icons/fa";
 import { FiHome, FiUser, FiShield } from "react-icons/fi";
 
 interface SidebarProps {
-  activeSection: "dashboard" | "events";
+  activeSection: "tickets" | "events";
   onSectionChange: (section: "tickets" | "events") => void;
   isAdmin?: boolean;
   onAdminClick?: () => void;
@@ -25,8 +25,6 @@ interface SidebarProps {
 const SidebarContent = ({
   activeSection,
   onSectionChange,
-  isAdmin,
-  onAdminClick,
 }: SidebarProps) => (
   <VStack gap={4} align="stretch" h="full">
     <Box p={6} borderBottom="1px" borderColor="gray.200">
@@ -57,12 +55,12 @@ const SidebarContent = ({
       <Button
         w="full"
         justifyContent="flex-start"
-        variant={activeSection === "dashboard" ? "solid" : "ghost"}
-        bg={activeSection === "dashboard" ? "gray.600" : "transparent"}
-        color={activeSection === "dashboard" ? "white" : "gray.600"}
+        variant={activeSection === "tickets" ? "solid" : "ghost"}
+        bg={activeSection === "tickets" ? "gray.600" : "transparent"}
+        color={activeSection === "tickets" ? "white" : "gray.600"}
         _hover={{
-          bg: activeSection === "dashboard" ? "gray.700" : "gray.100",
-          color: activeSection === "dashboard" ? "white" : "gray.700",
+          bg: activeSection === "tickets" ? "gray.700" : "gray.100",
+          color: activeSection === "tickets" ? "white" : "gray.700",
         }}
         onClick={() => onSectionChange("tickets")}
         size="lg"

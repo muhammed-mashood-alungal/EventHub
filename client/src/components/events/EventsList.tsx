@@ -102,7 +102,7 @@ export function EventsList({
   const statusConfig = getStatusConfig(eventStatus);
 
   return (
-    <Box minH="100vh" bg="gray.50" py={8}>
+    <Box minH="100vh" bg="gray.50" py={3}>
       <Container maxW="7xl" px={{ base: 4, lg: 8 }}>
         <VStack gap={8} align="stretch">
           {/* Header Section */}

@@ -1,7 +1,7 @@
 import { Button, Flex, Heading } from "@chakra-ui/react";
 import { EventsList } from "../../components/events/EventsList";
 import { useNavigate } from "react-router-dom";
-import {  useState } from "react";
+import { useState } from "react";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { EventService } from "../../services/event.service";
 import type { IPagination } from "../../types/common.types";
@@ -28,16 +28,14 @@ function MyEvents() {
     }
   };
 
-
   return (
     <>
       <Flex bg={"gray.50"} justify={"space-between"} p={5}>
-        <Heading as="h2" mb={6} bg={"white"} color={"black"}>
-          My Events
-        </Heading>
+        <Heading as="h2" bg={"white"} color={"black"}></Heading>
         <Button
-          colorScheme="blue"
-          _hover={{ bg: "blue.600" }}
+          variant={"solid"}
+          bg={"black"}
+          color={"white"}
           onClick={() => {
             navigate("/org/events/create");
           }}
@@ -46,15 +44,14 @@ function MyEvents() {
           Create Event
         </Button>
       </Flex>
-      
-        <EventsList
-         isOrganizer={true} 
-          loading={isLoading}
-          events={events}
-          pagination={pagination}
-          fetchEvents={fetchEvents}
-        />
-      
+
+      <EventsList
+        isOrganizer={true}
+        loading={isLoading}
+        events={events}
+        pagination={pagination}
+        fetchEvents={fetchEvents}
+      />
     </>
   );
 }

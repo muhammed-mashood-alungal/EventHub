@@ -57,20 +57,6 @@ const TicketList: React.FC = () => {
       return "ongoing";
     }
   };
-
-  //   const getEventStatus = (event: any) => {
-  //     const now = new Date();
-  //     const eventDate = new Date(event.date);
-
-  //     if (eventDate > now) {
-  //       return { status: "Upcoming", colorScheme: "blue" };
-  //     } else if (eventDate.toDateString() === now.toDateString()) {
-  //       return { status: "Today", colorScheme: "green" };
-  //     } else {
-  //       return { status: "Past", colorScheme: "gray" };
-  //     }
-  //   };
-
   const ticketColumns: TableColumn[] = [
     {
       header: "Event Title",
