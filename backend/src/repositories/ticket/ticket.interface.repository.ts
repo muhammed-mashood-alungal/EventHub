@@ -13,4 +13,5 @@ export interface ITicketRepository {
   ): Promise<{ tickets: ITicketModel[]; total: number }>;
   markAttendance(uniqueCode: string): Promise<ITicketModel | null>;
   serveFood(uniqueCode: string, foodType: string): Promise<ITicketModel | null>;
+  getTicketByEventAndAttendee(eventId: string, attendeeId: string): Promise<ITicketModel | null>;
 }

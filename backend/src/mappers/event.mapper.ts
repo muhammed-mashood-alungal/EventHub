@@ -3,7 +3,10 @@ import { IEventResponse } from "../types";
 import { getEventStatus } from "../utils";
 import { mapUserResponse } from "./user.mapper";
 
-export const mapUserEventResponse = (event: IEventModel): IEventResponse => {
+export const mapUserEventResponse = (
+  event: IEventModel,
+  registered?: boolean
+): IEventResponse => {
   return {
     id: event._id.toString(),
     title: event.title,
@@ -18,6 +21,7 @@ export const mapUserEventResponse = (event: IEventModel): IEventResponse => {
     venue: event.venue,
     registeredCount: event.registeredCount,
     capacity: event.capacity,
+    registered: registered || false,
     organizer: mapUserResponse(event.organizerId as IUserModel),
     slug: event.slug,
     createdAt: event.createdAt,

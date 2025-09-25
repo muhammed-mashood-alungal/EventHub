@@ -15,7 +15,7 @@ import {
   CardRoot,
   TagRoot
 } from "@chakra-ui/react";
-import { Calendar, MapPin, Clock, Users, Utensils } from "lucide-react";
+import { Calendar, MapPin, Clock, Utensils } from "lucide-react";
 import type { Event } from "../../types/events.types";
 
 interface EventCardProps {
@@ -65,6 +65,9 @@ export function EventCard({ event }: EventCardProps) {
       }}
       transition="all 0.2s"
       cursor="pointer"
+      onClick={()=>{
+
+      }}
     >
       <CardBody>
         <VStack align="stretch" gap={4}>

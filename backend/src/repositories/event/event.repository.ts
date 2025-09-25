@@ -72,6 +72,7 @@ export class EventRepository
   async registerEvent(
     registrationData: IEventRegistration
   ): Promise<IEventModel> {
+    
     const event = await this.findOne({
       _id: toObjectId(registrationData.eventId),
     });
@@ -85,7 +86,7 @@ export class EventRepository
       throw createHttpsError(StatusCodes.BAD_REQUEST, ERROR.EVENT.SEAT_FILLED);
     }
 
-    event.capacity++;
+    event.registeredCount++;
     return await event.save();
   }
 
@@ -107,8 +108,6 @@ export class EventRepository
       filter.startTime = { $lte: now };
       filter.endTime = { $gte: now };
     }
-
-    console.log(options.status, filter);
     return filter;
   }
 }

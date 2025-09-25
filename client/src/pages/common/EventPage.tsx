@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import {
   Badge,
   Box,
-  Card,
+  Button,
   CardBody,
   CardRoot,
   Container,
   Heading,
-  HStack,
-  Separator,
   VStack,
 } from "@chakra-ui/react";
 
@@ -19,8 +17,12 @@ import ReusableTable from "../../components/ui/table";
 import type { TableColumn } from "../../types/common.types";
 import { EventService } from "../../services/event.service";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/auth.context";
+import { useToastNotifier } from "../../contexts/toast.context";
+import LiveQrScanner from "../../components/events/QrScanner";
+import { TicketService } from "../../services/ticket.service";
+import BaseModal from "../../components/ui/model";
 
 interface EventManagementProps {
   currentUserId: string;
@@ -28,10 +30,21 @@ interface EventManagementProps {
 
 const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
   const [eventData, setEventData] = useState<Event>();
-  const { user } = useAuth();
+  const { user, authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const handleError = useErrorHandler();
   const slug = useParams().slug;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { notifySuccess } = useToastNotifier();
+  const [isQrOpen, setIsQrOpen] = useState(false);
+  const [currentQrAction, setCurrentQrAction] = useState("");
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/login", { state: { from: location.pathname } });
+    }
+  }, [user, authLoading]);
 
   useEffect(() => {
     if (!slug) return;
@@ -41,9 +54,6 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
         setLoading(true);
         const event = await EventService.getEventBySlug(slug);
         setEventData(event);
-        console.log(event);
-        console.log(user);
-        console.log(user?.id, ((event as any)?.organizer as any)?.id);
       } catch (error) {
         handleError(error);
       } finally {
@@ -54,18 +64,34 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
     fetchEvent();
   }, [slug, user]);
 
-
   if (loading) return <div>Loading...</div>;
 
   const isOrganizer = eventData?.organizer.id === currentUserId;
 
-  const handleRegister = () => console.log("Register for event");
-  const handleEdit = () => console.log("Edit event");
+  const handleRegister = async () => {
+    try {
+      await EventService.registerEvent(eventData?.id!, { userId: user?.id! });
+      notifySuccess("Registration successful!");
+      setEventData((prev) => (prev ? { ...prev, registered: true } : prev));
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
   const handleCancel = () => console.log("Cancel event");
-  const handleMarkAttendance = () => console.log("Mark attendance");
-  const handleServeBreakfast = () => console.log("Serve breakfast");
-  const handleServeLunch = () => console.log("Serve lunch");
-  const handleServeDinner = () => console.log("Serve dinner");
+
+  const handleQrScan = async (qrData: string) => {
+    try {
+      console.log(qrData)
+      const { message } = await TicketService.validateTicket(
+        qrData,
+        currentQrAction
+      );
+      notifySuccess(message);
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   const participantColumns: TableColumn[] = [
     { header: "Name", accessor: "name" },
@@ -125,21 +151,32 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
     <Box minH="100vh" py={8} bg={"gray.100"}>
       <Container maxW="7xl" px={{ base: 4, lg: 8 }}>
         <VStack gap={8} align="stretch">
-          {/* Event Details */}
+          <Button
+            color={"gray.800"}
+            colorScheme={"gray"}
+            variant={"outline"}
+            _hover={{
+              bg: "gray.100",
+            }}
+            width={20}
+            onClick={() => navigate(-1)}
+          >
+            Back
+          </Button>
           <EventDetails
             event={eventData!}
             isOrganizer={isOrganizer}
             onRegister={handleRegister}
             onCancel={handleCancel}
           />
-          {/* Manage Event - Only for organizers */}
+
           {isOrganizer && (
             <ManageEvent
               event={eventData!}
-              onMarkAttendance={handleMarkAttendance}
-              onServeBreakfast={handleServeBreakfast}
-              onServeLunch={handleServeLunch}
-              onServeDinner={handleServeDinner}
+              onScanClick={(action) => {
+                setCurrentQrAction(action);
+                setIsQrOpen(true);
+              }}
             />
           )}
 
@@ -158,6 +195,12 @@ const EventPage: React.FC<EventManagementProps> = ({ currentUserId }) => {
               </CardRoot>
             </VStack>
           )}
+
+          <BaseModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} >
+            <LiveQrScanner
+              onScan={handleQrScan}
+            />
+          </BaseModal>
         </VStack>
       </Container>
     </Box>

@@ -22,6 +22,7 @@ export interface Event {
     dinner?: boolean;
     drinks?: boolean;
   };
+  registered : boolean;
   guests: { name: string; email: string; role: string }[];
   capacity: number;
   createdAt: string;
@@ -37,5 +38,4 @@ export interface IEventFilterOptions extends IPaginationFilters {
 }
 export interface IEventRegistration {
   userId: string;
-  eventId: string;
 }

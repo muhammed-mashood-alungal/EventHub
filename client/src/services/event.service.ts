@@ -59,13 +59,14 @@ export const EventService = {
 
   async registerEvent(eventId: string, data: IEventRegistration): Promise<any> {
     try {
-      const response = await eventInstance.post(`/register`, {
+      const response = await eventInstance.post(`/register/${eventId}`, {
         ...data,
         eventId,
       });
       return response.data.ticketDetails;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
+      console.log(err.response)
       throw new Error(
         err.response?.data?.message || "Failed to register for event"
       );

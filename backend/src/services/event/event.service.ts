@@ -16,12 +16,9 @@ import {
 } from "../../utils";
 import { IEventService } from "./event.interface.service";
 import { ERROR } from "../../constants";
-import { sl } from "zod/v4/locales";
 import { mapUserEventResponse } from "../../mappers/event.mapper";
 import { ITicketService } from "../ticket/ticket.interface.service";
-import { ITicketModel } from "../../models";
 import { mapTicket } from "../../mappers";
-import { Types } from "mongoose";
 
 export class EventService implements IEventService {
   constructor(
@@ -56,8 +53,8 @@ export class EventService implements IEventService {
       options,
       organizerId
     );
-    console.log(events)
-    const mappedEvents = events.map(mapUserEventResponse);
+    console.log(events);
+    const mappedEvents = events.map((x) => mapUserEventResponse(x));
     const paginatedData = paginate(
       total,
       options.page,
@@ -71,7 +68,7 @@ export class EventService implements IEventService {
     options: IEventFilterOptions
   ): Promise<IPagination<IEventResponse>> {
     const { events, total } = await this._eventRepository.getAllEvents(options);
-    const mappedEvents = events.map(mapUserEventResponse);
+    const mappedEvents = events.map((x) => mapUserEventResponse(x));
     const paginatedData = paginate(
       total,
       options.page,
@@ -92,19 +89,21 @@ export class EventService implements IEventService {
         ERROR.EVENT.EVENT_NOT_FOUND
       );
     }
-
-    if (event.organizerId.toString() == userId) {
-      return mapUserEventResponse(event);
-    } else {
-      return mapUserEventResponse(event);
-    }
+    const registered = await this._ticketService.isUserRegistered(
+      event?._id,
+      userId
+    );
+    return mapUserEventResponse(event, registered);
   }
 
   async updateEvent(
     eventId: unknown,
     event: IEventCreate
   ): Promise<IEventResponse | null> {
-    const updatedData = await this._eventRepository.updateEvent(eventId as string, event);
+    const updatedData = await this._eventRepository.updateEvent(
+      eventId as string,
+      event
+    );
     if (!updatedData) {
       throw createHttpsError(
         StatusCodes.NOT_FOUND,
@@ -131,6 +130,7 @@ export class EventService implements IEventService {
       generatedTicket.qrCode as string,
       generatedTicket.uniqueCode as string
     );
+    console.log(generatedTicket)
     return mapTicket(generatedTicket);
   }
 }

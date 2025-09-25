@@ -25,7 +25,9 @@ export const TicketService = {
 
   async validateTicket(qrData: string, actionType: string): Promise<any> {
     try {
+      console.log(qrData , actionType)
       const response = await ticketInstance.post("/validate", { qrData, actionType });
+      console.log(response.data)
       return response.data.validationResult;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;

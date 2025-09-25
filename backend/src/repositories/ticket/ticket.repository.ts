@@ -66,6 +66,7 @@ export class TicketRepository
         ERROR.TICKET.ATTENDENCE_ALREADY_MARKED
       );
     }
+    await this.updateOne({ uniqueCode }, { $set: { attendanceMarked: true } });
     return ticket;
   }
 
@@ -96,5 +97,11 @@ export class TicketRepository
     await ticket.save();
 
     return ticket;
+  }
+  async getTicketByEventAndAttendee(
+    eventId: string,
+    attendeeId: string
+  ): Promise<ITicketModel | null> {
+    return await this.findOne({ eventId, attendeeId });
   }
 }

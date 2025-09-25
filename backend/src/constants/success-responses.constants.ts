@@ -8,6 +8,8 @@ export const SUCCESS = {
     CREATE_SUCCESS: "Event Created Successfully",
     UPDATED: "Event Updated Successfully",
     REGISTERED: "Event Registered Successfully",
+    ATTENDANCE_MARKED : "Attendance Marked",
+    FOOD_SERVED : (foodType : string) => `${foodType} Served `
   },
   COMMON: {
     OK: "Ok",

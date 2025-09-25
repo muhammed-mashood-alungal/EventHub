@@ -30,7 +30,7 @@ const SignupForm: React.FC<{ role: IRoles }> = ({ role }) => {
   const { setAuth } = useAuth();
   const handleError = useErrorHandler();
   const { notifySuccess } = useToastNotifier();
-  const from = location.state?.from?.pathname || "/";
+  const from = location.state?.from?.pathname || "/events";
 
   const {
     register,
@@ -52,7 +52,12 @@ const SignupForm: React.FC<{ role: IRoles }> = ({ role }) => {
       });
       setAuth(user, token);
       notifySuccess(message);
-      navigate(from, { replace: true });
+      navigate(
+        from ? from : user.role == "organizer" ? "/org/events" : "/events",
+        {
+          replace: true,
+        }
+      );
     } catch (error) {
       handleError(error, "Signup error");
     }

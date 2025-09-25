@@ -22,7 +22,7 @@ export const sendEventRegistrationEmail = async (
   uniqueCode: string
 ) => {
   const html = `
-    <h1>Registration Successful ✅</h1>
+    <h1>Registration Successful </h1>
     <p>Hi, you have successfully registered for <b>${eventName}</b>.</p>
     <p>Please find your ticket below:</p>
     <p><img src="${qrCode}" alt="QR Code" style="width:200px;height:200px;" /></p>

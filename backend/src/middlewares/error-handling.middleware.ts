@@ -18,5 +18,5 @@ export const errorHandler = (
 
   console.error(err);
 
-  res.status(statusCode).json({ success: false, error: message });
+  res.status(statusCode).json({ success: false, message: message });
 };

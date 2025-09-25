@@ -30,9 +30,12 @@ export const ERROR = {
     EVENT_EXISTS: "Event With Same title Exists Already for you.",
   },
   TICKET: {
+    ALREADY_REGISTERED : 'Ticket Already Registered',
     NOT_FOUND: "Ticket not found",
     ATTENDENCE_ALREADY_MARKED: "Attendance already marked",
     FOOD_SERVED_ALREADY: (foodType: string) =>
-      `Food served for ${foodType} already registered`,
+      `${foodType} Food served already for this Attendee`,
+    INVALID_QR : "Invalid QR Code, Try Another One",
+    INVALID_TICKET :  "Invalid Ticket" 
   },
 } as const;

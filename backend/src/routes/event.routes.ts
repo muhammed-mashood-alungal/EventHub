@@ -37,7 +37,7 @@ eventRouter.put(
   eventController.updateEvent.bind(eventController)
 );
 eventRouter.post(
-  "/register",
+  "/register/:eventId",
   authMiddleware,
   eventController.registerEvent.bind(eventController)
 );

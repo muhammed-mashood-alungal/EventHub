@@ -10,7 +10,7 @@ import MyEvents from "../pages/organizer/MyEventsPage";
 import CreateEvent from "../pages/organizer/CreateEventPage";
 import EventPage from "../pages/common/EventPage";
 import { sampleEvents } from "../components/events/sample";
-import QRScanner from "../components/qr/QrScanner";
+import QRScanner from "../components/events/QrScanner";
 import { ProtectedRoute } from "./ProtectedRoute";
 import EditEventPage from "../pages/organizer/EditEventPage";
 import UserLayout from "../layouts/UserLayout";
@@ -63,18 +63,7 @@ export default function AppRoutes() {
         element={<QRScanner onScan={() => console.log("scenner")} />}
       />
 
-      <Route
-        path="/events/:slug"
-        element={
-          <ProtectedRoute
-            isLoading={authLoading}
-            isAuthenticated={isAuthenticated}
-            allowedRoles={["user", "organizer"]}
-          >
-            <EventPage currentUserId={user?.id as string} />
-          </ProtectedRoute>
-        }
-      />
+     
       <Route path="/" element={<UserLayout />}>
         <Route path="events" element={<AllEventsPage />} />
         <Route

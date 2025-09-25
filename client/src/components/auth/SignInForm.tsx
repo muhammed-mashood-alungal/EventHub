@@ -18,7 +18,7 @@ function SignInForm() {
   const { notifySuccess } = useToastNotifier();
   const handleError = useErrorHandler();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const from = location.state?.from?.pathname || "/";
+  const from = location.state?.from?.pathname || null;
 
   const {
     register,
@@ -35,7 +35,7 @@ function SignInForm() {
       setAuth(user, token);
       notifySuccess(message);
       console.log(user);
-      navigate(user.role == "organizer" ? "/org/events" : from, {
+      navigate(from ? from : user.role == "organizer" ? "/org/events" : "/events", {
         replace: true,
       });
     } catch (error) {

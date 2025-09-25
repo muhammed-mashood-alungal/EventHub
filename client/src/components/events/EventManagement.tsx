@@ -14,29 +14,19 @@ import CustomButton from "../ui/button";
 import type { Event } from "../../types/events.types";
 import { Check } from "lucide-react";
 
-
 interface ManageEventProps {
   event: Event;
-  onMarkAttendance: () => void;
-  onServeBreakfast: () => void;
-  onServeLunch: () => void;
-  onServeDinner: () => void;
+  onScanClick: (action: string) => void;
 }
 
-const ManageEvent: React.FC<ManageEventProps> = ({
-  event,
-  onMarkAttendance,
-  onServeBreakfast,
-  onServeLunch,
-  onServeDinner,
-}) => {
+const ManageEvent: React.FC<ManageEventProps> = ({ event, onScanClick }) => {
   const attendedCount = 50;
   const breakfastCount = 20;
   const lunchCount = 30;
   const dinnerCount = 40;
 
   return (
-    <CardRoot bg={'gray.200'} color={'gray.900'} border={0}>
+    <CardRoot bg={"gray.200"} color={"gray.900"} border={0}>
       <CardBody>
         <VStack align="stretch" gap={6}>
           <Heading size="md" color="gray.700">
@@ -79,25 +69,34 @@ const ManageEvent: React.FC<ManageEventProps> = ({
             <CustomButton
               colorScheme="green"
               leftIcon={<Check />}
-              onClick={onMarkAttendance}
+              onClick={() => onScanClick("attendance")}
             >
               Mark Attendance
             </CustomButton>
 
             {event.meals.breakfast && (
-              <CustomButton colorScheme="orange" onClick={onServeBreakfast}>
+              <CustomButton
+                colorScheme="orange"
+                onClick={() => onScanClick("food-breakfast")}
+              >
                 Serve Breakfast
               </CustomButton>
             )}
 
             {event.meals.lunch && (
-              <CustomButton colorScheme="yellow" onClick={onServeLunch}>
+              <CustomButton
+                colorScheme="yellow"
+                onClick={() => onScanClick("food-lunch")}
+              >
                 Serve Lunch
               </CustomButton>
             )}
 
             {event.meals.dinner && (
-              <CustomButton colorScheme="red" onClick={onServeDinner}>
+              <CustomButton
+                colorScheme="red"
+                onClick={() => onScanClick("food-dinner")}
+              >
                 Serve Dinner
               </CustomButton>
             )}
@@ -107,6 +106,5 @@ const ManageEvent: React.FC<ManageEventProps> = ({
     </CardRoot>
   );
 };
-
 
 export default ManageEvent;

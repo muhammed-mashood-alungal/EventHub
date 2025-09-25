@@ -50,6 +50,7 @@ export interface IEventResponse extends Omit<IEvent, "_id" | "organizerId"> {
   id : string;
   status  : 'upcoming' | 'completed' | 'ongoing'
   organizer : IUserResponse;
+  registered : boolean
 }
 
 export type FoodType = "breakfast" | "lunch" | "dinner" | "drinks";

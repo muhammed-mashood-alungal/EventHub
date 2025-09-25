@@ -48,6 +48,7 @@ function MyEvents() {
       </Flex>
       
         <EventsList
+         isOrganizer={true} 
           loading={isLoading}
           events={events}
           pagination={pagination}

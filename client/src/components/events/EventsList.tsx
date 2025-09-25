@@ -10,27 +10,24 @@ import {
   Input,
   useBreakpointValue,
   createListCollection,
-  SelectRoot,
-  SelectItem,
-  SelectTrigger,
-  SelectContent,
-  SelectValueText,
   Button,
   ButtonGroup,
 } from "@chakra-ui/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Event } from "../../types/events.types";
 import { EventCard } from "./EventCard";
 import { Pagination } from "../common/Pagination";
 import type { IPagination } from "../../types/common.types";
 import { categoriesNames } from "../data/categories";
 import CustomSelect from "../ui/drop-down";
+import { useNavigate } from "react-router-dom";
 
 interface EventsListProps {
   events: Event[];
   pagination: IPagination | null;
   loading: boolean;
   fetchEvents: (query: string) => void;
+  isOrganizer: boolean;
 }
 
 type EventStatus = "upcoming" | "completed" | "ongoing";
@@ -40,6 +37,7 @@ export function EventsList({
   pagination,
   loading,
   fetchEvents,
+  isOrganizer,
 }: EventsListProps) {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -55,16 +53,13 @@ export function EventsList({
     ],
   });
 
-  // Remove fetchEvents calls from handlers, just update state:
   const handleStatusChange = (status: EventStatus) => {
     setEventStatus(status);
     setPage(1);
   };
 
-  const handleCategoryChange = (details: any) => {
-    setCategory(details.value[0] || "");
-    setPage(1);
-  };
+  const navigate = useNavigate();
+
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -250,14 +245,24 @@ export function EventsList({
             ) : (
               <SimpleGrid columns={columns} gap={6}>
                 {events?.map((event) => (
-                  <EventCard key={event.id} event={event} />
+                  <span
+                    onClick={() => {
+                      navigate(
+                        isOrganizer
+                          ? `/org/events/${event.slug}`
+                          : `/events/${event.slug}`
+                      );
+                    }}
+                  >
+                    <EventCard key={event.id} event={event} />
+                  </span>
                 ))}
               </SimpleGrid>
             )}
           </Box>
 
           {/* Pagination */}
-          {events?.length > 0 && pagination  && (
+          {events?.length > 0 && pagination && (
             <Flex justify="center">
               <Pagination
                 currentPage={pagination.page}
@@ -266,6 +271,8 @@ export function EventsList({
               />
             </Flex>
           )}
+
+
         </VStack>
       </Container>
     </Box>
