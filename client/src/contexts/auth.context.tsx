@@ -1,12 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import AuthService from "../services/auth.services";
 import type { IUser } from "../types/user.types";
+import { useNavigate } from "react-router-dom";
 
 type AuthContextType = {
   user: IUser | null;
   isAuthenticated: boolean;
   setAuth: (user: IUser | null, token?: string) => void;
   removeAuth: () => void;
+  logout: () => void;
   authLoading?: boolean;
 };
 
@@ -16,6 +18,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
+  
 
   useEffect(() => {
     fetchUser();
@@ -49,9 +52,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsAuthenticated(false);
   };
 
+  const logout = async () => {
+      await AuthService.logout();
+      localStorage.removeItem("event_hub_token");
+      removeAuth();
+
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, setAuth, removeAuth, authLoading }}
+      value={{
+        user,
+        isAuthenticated,
+        setAuth,
+        removeAuth,
+        authLoading,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

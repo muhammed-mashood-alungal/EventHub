@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { FaBars } from "react-icons/fa";
 import { FiHome, FiUser } from "react-icons/fi";
+import { useAuth } from "../../contexts/auth.context";
 
 interface SidebarProps {
   activeSection: "tickets" | "events";
@@ -21,57 +22,70 @@ interface SidebarProps {
   onAdminClick?: () => void;
 }
 
-const SidebarContent = ({
-  activeSection,
-  onSectionChange,
-}: SidebarProps) => (
-  <VStack gap={4} align="stretch" h="full">
-    <Box p={6} borderBottom="1px" borderColor="gray.200">
-      <Text fontSize="xl" fontWeight="bold" color="black">
-       User Dashboard
-      </Text>
-    </Box>
+const SidebarContent = ({ activeSection, onSectionChange }: SidebarProps) => {
+  const { logout, user } = useAuth();
+  return (
+    <VStack gap={4} align="stretch" h="full">
+      <Box p={6} borderBottom="1px" borderColor="gray.200">
+        <Text fontSize="xl" fontWeight="bold" color="black">
+          User Dashboard
+        </Text>
+      </Box>
 
-    <VStack gap={2} px={4} flex={1}>
-      <Button
-        w="full"
-        justifyContent="flex-start"
-        variant={activeSection === "events" ? "solid" : "ghost"}
-        bg={activeSection === "events" ? "gray.600" : "transparent"}
-        color={activeSection === "events" ? "white" : "gray.600"}
-        _hover={{
-          bg: activeSection === "events" ? "gray.700" : "gray.100",
-          color: activeSection === "events" ? "white" : "gray.700",
-        }}
-        onClick={() => onSectionChange("events")}
-        size="lg"
-        fontSize="md"
-        gap={2}
-      >
-        <Icon as={FiUser} />
-        All Events
-      </Button>
-      <Button
-        w="full"
-        justifyContent="flex-start"
-        variant={activeSection === "tickets" ? "solid" : "ghost"}
-        bg={activeSection === "tickets" ? "gray.600" : "transparent"}
-        color={activeSection === "tickets" ? "white" : "gray.600"}
-        _hover={{
-          bg: activeSection === "tickets" ? "gray.700" : "gray.100",
-          color: activeSection === "tickets" ? "white" : "gray.700",
-        }}
-        onClick={() => onSectionChange("tickets")}
-        size="lg"
-        fontSize="md"
-        gap={2}
-      >
-        <Icon as={FiHome} />
-        My Tickets
-      </Button>
+      <VStack gap={2} px={4} flex={1}>
+        <Button
+          w="full"
+          justifyContent="flex-start"
+          variant={activeSection === "events" ? "solid" : "ghost"}
+          bg={activeSection === "events" ? "gray.600" : "transparent"}
+          color={activeSection === "events" ? "white" : "gray.600"}
+          _hover={{
+            bg: activeSection === "events" ? "gray.700" : "gray.100",
+            color: activeSection === "events" ? "white" : "gray.700",
+          }}
+          onClick={() => onSectionChange("events")}
+          size="lg"
+          fontSize="md"
+          gap={2}
+        >
+          <Icon as={FiUser} />
+          All Events
+        </Button>
+        <Button
+          w="full"
+          justifyContent="flex-start"
+          variant={activeSection === "tickets" ? "solid" : "ghost"}
+          bg={activeSection === "tickets" ? "gray.600" : "transparent"}
+          color={activeSection === "tickets" ? "white" : "gray.600"}
+          _hover={{
+            bg: activeSection === "tickets" ? "gray.700" : "gray.100",
+            color: activeSection === "tickets" ? "white" : "gray.700",
+          }}
+          onClick={() => onSectionChange("tickets")}
+          size="lg"
+          fontSize="md"
+          gap={2}
+        >
+          <Icon as={FiHome} />
+          My Tickets
+        </Button>
+      </VStack>
+      {user && (
+        <Box p={4} borderTop="1px" borderColor="gray.200">
+          <Button
+            w="full"
+            colorScheme="red"
+            variant="outline"
+            color={"black"}
+            onClick={logout}
+          >
+            Logout
+          </Button>
+        </Box>
+      )}
     </VStack>
-  </VStack>
-);
+  );
+};
 
 export const UserSidebar = (props: SidebarProps) => {
   const { open, onOpen, onClose, setOpen } = useDisclosure();

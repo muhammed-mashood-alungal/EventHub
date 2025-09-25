@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Box, Button, VStack, Text, Spinner, Heading } from "@chakra-ui/react";
+import { Box, Button, VStack, Text, Spinner, Heading, Separator } from "@chakra-ui/react";
 import { loginSchema } from "../../schema/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ILoginInput } from "../../types/auth.types";
@@ -18,7 +18,7 @@ function SignInForm() {
   const { notifySuccess } = useToastNotifier();
   const handleError = useErrorHandler();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const from = location.state?.from?.pathname || null;
+  const from = location.state?.from?.pathname || "/";
 
   const {
     register,
@@ -34,8 +34,7 @@ function SignInForm() {
       const { token, user, message } = await AuthService.login(data);
       setAuth(user, token);
       notifySuccess(message);
-      console.log(user);
-      navigate(from ? from : user.role == "organizer" ? "/org/events" : "/", {
+      navigate(user.role == "organizer" ? "/org/events" : from, {
         replace: true,
       });
     } catch (error) {
@@ -133,6 +132,17 @@ function SignInForm() {
                 >
                   Sign up here
                 </Text>
+
+                <Separator/>
+                <Box p={2} fontSize="sm" color="gray.700">
+                  <Text>Login as  Organizer</Text>
+                  <Text>Email: muhdmashoodalungal@gmail.com</Text>
+                  <Text>Password: Admin@123</Text>
+                  <Separator/>
+                  <Text mt={2}>Login as  User</Text>
+                  <Text>Email: user@gmail.com</Text>
+                  <Text>Password: Admin@123</Text>
+                </Box>
               </Text>
             </Box>
           </VStack>

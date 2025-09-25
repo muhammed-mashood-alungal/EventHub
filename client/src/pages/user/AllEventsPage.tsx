@@ -1,6 +1,4 @@
-import {  Flex, Heading } from "@chakra-ui/react";
 import { EventsList } from "../../components/events/EventsList";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { EventService } from "../../services/event.service";
@@ -27,12 +25,7 @@ function AllEventsPage() {
 
   return (
     <>
-      <Flex bg={"gray.50"} justify={"space-between"} p={5}>
-        <Heading as="h2" mb={6} bg={"white"} color={"black"}>
-          All Events
-        </Heading>
-      </Flex>
-
+      
       <EventsList
         isOrganizer={false}
         loading={isLoading}

@@ -4,7 +4,6 @@ import {
   Text,
   Icon,
   Button,
-  Separator,
   useBreakpointValue,
   Drawer,
   IconButton,
@@ -14,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { FaBars } from "react-icons/fa";
 import { FiUser } from "react-icons/fi";
+import { useAuth } from "../../contexts/auth.context";
 
 interface SidebarProps {
   activeSection: "events";
@@ -22,36 +22,57 @@ interface SidebarProps {
   onAdminClick?: () => void;
 }
 
-const SidebarContent = ({ activeSection, onSectionChange }: SidebarProps) => (
-  <VStack gap={4} align="stretch" h="full">
-    <Box p={6} borderBottom="1px" borderColor="gray.200">
-      <Text fontSize="xl" fontWeight="bold" color="black">
-        Organizer Dashboard
-      </Text>
-    </Box>
+const SidebarContent = ({ activeSection, onSectionChange }: SidebarProps) => {
+  const { logout, user } = useAuth();
+  return (
+    <VStack h="full" justify="space-between" align="stretch">
+      {/* Top Section */}
+      <Box>
+        <Box p={6} borderBottom="1px" borderColor="gray.200">
+          <Text fontSize="xl" fontWeight="bold" color="black">
+            Organizer Dashboard
+          </Text>
+        </Box>
 
-    <VStack gap={2} px={4} flex={1}>
-      <Button
-        w="full"
-        justifyContent="flex-start"
-        variant={activeSection === "events" ? "solid" : "ghost"}
-        bg={activeSection === "events" ? "gray.600" : "transparent"}
-        color={activeSection === "events" ? "white" : "gray.600"}
-        _hover={{
-          bg: activeSection === "events" ? "gray.700" : "gray.100",
-          color: activeSection === "events" ? "white" : "gray.700",
-        }}
-        onClick={() => onSectionChange("events")}
-        size="lg"
-        fontSize="md"
-        gap={2}
-      >
-        <Icon as={FiUser} />
-        Events
-      </Button>
+        <VStack gap={2} px={4} pt={4}>
+          <Button
+            w="full"
+            justifyContent="flex-start"
+            variant={activeSection === "events" ? "solid" : "ghost"}
+            bg={activeSection === "events" ? "gray.600" : "transparent"}
+            color={activeSection === "events" ? "white" : "gray.600"}
+            _hover={{
+              bg: activeSection === "events" ? "gray.700" : "gray.100",
+              color: activeSection === "events" ? "white" : "gray.700",
+            }}
+            onClick={() => onSectionChange("events")}
+            size="lg"
+            fontSize="md"
+            gap={2}
+          >
+            <Icon as={FiUser} />
+            Events
+          </Button>
+        </VStack>
+      </Box>
+
+      {/* Bottom Section (Logout Button) */}
+      {user && (
+        <Box p={4} borderTop="1px" borderColor="gray.200">
+          <Button
+            w="full"
+            colorScheme="red"
+            variant="outline"
+            color={"black"}
+            onClick={logout}
+          >
+            Logout
+          </Button>
+        </Box>
+      )}
     </VStack>
-  </VStack>
-);
+  );
+};
 
 export const OrganizerSidebar = (props: SidebarProps) => {
   const { open, onOpen, onClose, setOpen } = useDisclosure();

@@ -55,7 +55,14 @@ export default function AppRoutes() {
 
       <Route path="/" element={<UserLayout />}>
         <Route path="" index element={<AllEventsPage />} />
-        <Route path="tickets" element={<MyTicketsPage />} />
+        <Route
+          path="tickets"
+          element={
+            <ProtectedRoute>
+              <MyTicketsPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/:slug"
           element={<EventPage currentUserId={user?.id as string} />}
