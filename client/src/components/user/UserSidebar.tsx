@@ -14,6 +14,7 @@ import {
 import { FaBars } from "react-icons/fa";
 import { FiHome, FiUser } from "react-icons/fi";
 import { useAuth } from "../../contexts/auth.context";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   activeSection: "tickets" | "events";
@@ -24,6 +25,7 @@ interface SidebarProps {
 
 const SidebarContent = ({ activeSection, onSectionChange }: SidebarProps) => {
   const { logout, user } = useAuth();
+  const navigate = useNavigate()
   return (
     <VStack gap={4} align="stretch" h="full">
       <Box p={6} borderBottom="1px" borderColor="gray.200">
@@ -70,7 +72,7 @@ const SidebarContent = ({ activeSection, onSectionChange }: SidebarProps) => {
           My Tickets
         </Button>
       </VStack>
-      {user && (
+      {user ? (
         <Box p={4} borderTop="1px" borderColor="gray.200">
           <Button
             w="full"
@@ -80,6 +82,18 @@ const SidebarContent = ({ activeSection, onSectionChange }: SidebarProps) => {
             onClick={logout}
           >
             Logout
+          </Button>
+        </Box>
+      ) : (
+         <Box p={4} borderTop="1px" borderColor="gray.200">
+          <Button
+            w="full"
+            colorScheme="red"
+            variant="outline"
+            color={"black"}
+            onClick={()=> navigate('/login')}
+          >
+            Login
           </Button>
         </Box>
       )}
