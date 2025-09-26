@@ -46,7 +46,6 @@ export class TicketService implements ITicketService {
       qrCode,
     };
     const newTicket = await this._ticketRepository.createTicket(ticketData);
-    console.log(newTicket)
     return mapTicket(newTicket);
   }
 

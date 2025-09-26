@@ -27,7 +27,6 @@ export const EventService = {
   async getEventBySlug(slug: string): Promise<Event> {
     try {
       const response = await eventInstance.get(`/${slug}`);
-      console.log(response.data)
       return response.data.event;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;

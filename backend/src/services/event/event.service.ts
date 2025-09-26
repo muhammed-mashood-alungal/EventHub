@@ -141,8 +141,6 @@ export class EventService implements IEventService {
       link,
       generatedTicket.uniqueCode as string
     );
-    console.log("generatedTicket+++++++++++++++++++++++++++++++++++++");
-    console.log(generatedTicket);
     return generatedTicket;
   }
 }
