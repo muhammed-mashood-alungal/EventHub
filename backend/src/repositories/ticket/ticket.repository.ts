@@ -20,7 +20,7 @@ export class TicketRepository
   }
 
   async createTicket(ticket: ITicketCreate): Promise<ITicketModel> {
-    return await this.model.create(ticket);
+    return (await this.model.create(ticket)).populate('attendeeId userId');
   }
 
   async getEventTickets(
@@ -105,7 +105,7 @@ export class TicketRepository
 
   async getEventStats(eventId: string): Promise<IEventStats> {
     const tickets = await this.find({ eventId });
-    
+
     const res: IEventStats = {
       totalRegistrations: tickets.length,
       participated: 0,
