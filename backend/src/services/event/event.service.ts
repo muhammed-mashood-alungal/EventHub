@@ -20,6 +20,7 @@ import { mapUserEventResponse } from "../../mappers/event.mapper";
 import { ITicketService } from "../ticket/ticket.interface.service";
 import { mapTicket } from "../../mappers";
 import { env } from "../../configs";
+import { log } from "console";
 
 export class EventService implements IEventService {
   constructor(
@@ -54,7 +55,6 @@ export class EventService implements IEventService {
       options,
       organizerId
     );
-    console.log(events);
     const mappedEvents = events.map((x) => mapUserEventResponse(x));
     const paginatedData = paginate(
       total,
@@ -133,15 +133,16 @@ export class EventService implements IEventService {
 
     await this._eventRepository.increaseRegisterCount(event.id as string);
 
+    const link = `${env.CLIENT_URL}/tickets`;
 
-    const link = `${env.CLIENT_URL}/tickets`
-    
     await sendEventRegistrationEmail(
       user?.email!,
       event.title,
       link,
       generatedTicket.uniqueCode as string
     );
-    return mapTicket(generatedTicket);
+    console.log("generatedTicket+++++++++++++++++++++++++++++++++++++");
+    console.log(generatedTicket);
+    return generatedTicket;
   }
 }

@@ -3,6 +3,8 @@ import { mapUserEventResponse } from "./event.mapper";
 import { mapUserResponse } from "./user.mapper";
 
 export const mapTicket = (ticket: any): ITicketResponse => {
+  console.log(ticket.eventId)
+  console.log('+++++++++++++++++++++++++++++++++++++')
   return {
     id: ticket?.id,
     uniqueCode: ticket.uniqueCode,

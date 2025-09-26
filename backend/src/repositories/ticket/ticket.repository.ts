@@ -20,7 +20,7 @@ export class TicketRepository
   }
 
   async createTicket(ticket: ITicketCreate): Promise<ITicketModel> {
-    return (await this.model.create(ticket)).populate('attendeeId userId');
+    return (await this.model.create(ticket)).populate('attendeeId eventId');
   }
 
   async getEventTickets(

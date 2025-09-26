@@ -3,7 +3,7 @@ import { IUserResponse } from "../types";
 
 export const mapUserResponse = (user: IUserModel): IUserResponse => {
   return {
-    id: user?._id ? user._id?.toString() : '',
+    id: user?._id?.toString(),
     email: user.email,
     name: user.name,
     role: user.role,

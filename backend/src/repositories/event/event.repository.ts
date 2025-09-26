@@ -86,7 +86,7 @@ export class EventRepository
   }
 
   async increaseRegisterCount(eventId: string): Promise<void> {
-    await this.updateOne({ eventId }, { $inc: { registeredCount: 1 } });
+    await this.updateOne({ _id : eventId }, { $inc: { registeredCount: 1 } });
   }
 
   _generateFilter(options: IEventFilterOptions) {
