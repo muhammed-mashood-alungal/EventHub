@@ -8,7 +8,7 @@ export const mapUserEventResponse = (
   registered?: boolean
 ): IEventResponse => {
   return {
-    id: event._id.toString(),
+    id: event?._id?.toString(),
     title: event.title,
     description: event.description,
     category: event.category,

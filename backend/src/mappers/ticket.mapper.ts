@@ -4,7 +4,7 @@ import { mapUserResponse } from "./user.mapper";
 
 export const mapTicket = (ticket: any): ITicketResponse => {
   return {
-    id: ticket.id,
+    id: ticket?.id,
     uniqueCode: ticket.uniqueCode,
     qrCode: ticket.qrCode,
     event: mapUserEventResponse(ticket.eventId),
